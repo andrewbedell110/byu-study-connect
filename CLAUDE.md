@@ -1,4 +1,4 @@
-# BYU Study Connect
+# BYU Synapse
 
 ## Overview
 PWA that helps BYU students find study partners by matching on shared classes and availability. Built with vanilla JS + Firebase, deployed on Vercel.
@@ -30,7 +30,7 @@ PWA that helps BYU students find study partners by matching on shared classes an
 │   ├── profile.js          # Profile display + per-section inline editing
 │   ├── discover.js         # Classmate discovery + friend requests
 │   ├── friends.js          # Friends list, requests, expanded details
-│   └── byu-classes.js      # BYU class catalog (100+ courses, default export)
+│   └── byu-classes.js      # BYU class catalog (~5,400 courses, default export)
 ├── images/                 # PWA icons (192, 512)
 ├── manifest.json           # PWA manifest
 └── sw.js                   # Service worker (network-first)
@@ -51,8 +51,8 @@ window.handleLogin = async function() { ... }
 ```
 
 ### Firestore
-- **Users** collection: `{ name, email, phone, photoURL, classes[], availability{}, profileSetup, createdAt }`
-- **Friend Requests** collection: doc ID = `{fromUid}_{toUid}`, fields: `{ from, fromName, to, status, createdAt }`
+- **Users** collection: `{ name, email, phone, photoURL, classes[], availability{}, friends[], profileSetup, createdAt }`
+- **Friend Requests** collection: doc ID = `{fromUid}_{toUid}`, fields: `{ from, fromName, to, status, createdAt, acceptedAt }`
 - Always use `setDoc(docRef, data, { merge: true })` for updates
 - `array-contains-any` for finding classmates (max 30 items per Firestore limit)
 
@@ -70,7 +70,8 @@ Each section (contact, classes, availability) has `*-view` and `*-edit` divs tog
 ## CSS Design System
 - Variables defined in `:root` in `style.css`
 - Colors: `--blue-50` to `--blue-700`, `--gray-50` to `--gray-900`, `--emerald-*`, `--rose-*`, `--amber-*`
-- Dark theme: `--midnight`, `--deep`, `--navy`, `--slate`
+- Dark theme: `--midnight`, `--deep`, `--navy`, `--navy-light`, `--slate`
+- Glass effects: `--glass-bg`, `--glass-border`, `--glass-bg-light`, `--glass-border-light`
 - Radius: `--radius-xs` (6px) to `--radius-full` (9999px)
 - Shadows: `--shadow-xs` to `--shadow-xl`, `--shadow-glow-blue`, `--shadow-glow-amber`
 - Easing: `--ease-out-expo`, `--ease-spring`

@@ -1,7 +1,7 @@
-// Service Worker for BYU Study Connect PWA
+// Service Worker for BYU Synapse PWA
 // This enables the "Add to Home Screen" functionality
 
-const CACHE_NAME = 'byu-study-connect-v1';
+const CACHE_NAME = 'byu-synapse-v1';
 
 // Install event
 self.addEventListener('install', (event) => {
