@@ -1,0 +1,404 @@
+/* ============================================
+   FRIENDS PAGE - Additional Styles
+   ============================================ */
+
+/* --- Friends Tabs --- */
+.friends-tabs {
+  display: flex;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  position: sticky;
+  top: 56px;
+  z-index: 99;
+}
+
+.friends-tab {
+  flex: 1;
+  padding: 14px 16px;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.friends-tab.active {
+  color: var(--navy);
+}
+
+.friends-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 3px;
+  background: var(--navy);
+  border-radius: 3px 3px 0 0;
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  background: var(--gray-100);
+  color: var(--gray-500);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.friends-tab.active .tab-count {
+  background: var(--sky-light);
+  color: var(--royal);
+}
+
+.tab-count.has-items {
+  background: var(--danger);
+  color: var(--white);
+}
+
+/* --- Loading State --- */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 24px;
+  color: var(--gray-500);
+  font-size: 0.9rem;
+}
+
+/* --- Friend Card --- */
+.friend-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  margin-bottom: 10px;
+  overflow: hidden;
+  animation: fadeInUp 0.3s ease forwards;
+  opacity: 0;
+}
+
+.friend-card:nth-child(1) { animation-delay: 0s; }
+.friend-card:nth-child(2) { animation-delay: 0.05s; }
+.friend-card:nth-child(3) { animation-delay: 0.1s; }
+.friend-card:nth-child(4) { animation-delay: 0.15s; }
+
+.friend-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.friend-card-header:hover {
+  background: var(--gray-50);
+}
+
+.friend-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--white);
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.friend-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.friend-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--gray-900);
+  margin-bottom: 2px;
+}
+
+.friend-shared {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}
+
+.friend-expand-icon {
+  color: var(--gray-300);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.friend-card.expanded .friend-expand-icon {
+  transform: rotate(180deg);
+}
+
+/* --- Friend Card Expanded Details --- */
+.friend-details {
+  display: none;
+  border-top: 1px solid var(--gray-100);
+  padding: 16px 18px;
+  background: var(--gray-50);
+}
+
+.friend-card.expanded .friend-details {
+  display: block;
+}
+
+/* Contact Info */
+.friend-contact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+  border: 1px solid var(--gray-200);
+}
+
+.friend-contact svg {
+  color: var(--royal);
+  flex-shrink: 0;
+}
+
+.friend-contact-info {
+  flex: 1;
+}
+
+.friend-contact-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.friend-contact-value {
+  font-size: 0.9rem;
+  color: var(--gray-900);
+  font-weight: 500;
+}
+
+.friend-contact-value a {
+  color: var(--royal);
+  text-decoration: none;
+}
+
+.friend-contact-value a:hover {
+  text-decoration: underline;
+}
+
+/* Shared Classes List */
+.friend-section-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gray-700);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.friend-classes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.friend-class-tag {
+  padding: 4px 10px;
+  background: var(--sky-light);
+  color: var(--royal);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* --- Availability Comparison --- */
+.availability-compare {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-200);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 56px repeat(7, 1fr);
+  min-width: 380px;
+}
+
+.compare-header {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--navy);
+  text-align: center;
+  padding: 8px 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.compare-corner {
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.compare-time {
+  font-size: 0.63rem;
+  color: var(--gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2px;
+  font-weight: 600;
+  background: var(--gray-50);
+  border-right: 1px solid var(--gray-200);
+}
+
+.compare-cell {
+  height: 22px;
+  border: 1px solid var(--white);
+  background: var(--gray-100);
+}
+
+/* Both available — highlighted */
+.compare-cell.both {
+  background: var(--royal);
+}
+
+/* Only you */
+.compare-cell.you-only {
+  background: var(--sky);
+}
+
+/* Only them */
+.compare-cell.them-only {
+  background: #B8D4E8;
+}
+
+/* --- Compare Legend --- */
+.compare-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--gray-200);
+  background: var(--gray-50);
+}
+
+.compare-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.compare-legend-box {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.compare-legend-box.both { background: var(--royal); }
+.compare-legend-box.you-only { background: var(--sky); }
+.compare-legend-box.them-only { background: #B8D4E8; }
+
+/* --- Request Card --- */
+.request-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  margin-bottom: 10px;
+  animation: fadeInUp 0.3s ease forwards;
+  opacity: 0;
+}
+
+.request-card:nth-child(1) { animation-delay: 0s; }
+.request-card:nth-child(2) { animation-delay: 0.05s; }
+.request-card:nth-child(3) { animation-delay: 0.1s; }
+
+.request-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.request-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--white);
+  flex-shrink: 0;
+}
+
+.request-info {
+  flex: 1;
+}
+
+.request-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--gray-900);
+  margin-bottom: 2px;
+}
+
+.request-shared {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}
+
+.request-classes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.request-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.request-actions .btn {
+  flex: 1;
+}
+
+/* --- Padding for first card --- */
+#friends-list, #requests-list {
+  padding-top: 12px;
+}

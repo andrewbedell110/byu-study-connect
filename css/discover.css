@@ -1,0 +1,209 @@
+/* ============================================
+   DISCOVER PAGE - Additional Styles
+   ============================================ */
+
+/* --- Filter Bar --- */
+.filter-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 12px 0;
+  position: sticky;
+  top: 56px;
+  z-index: 99;
+}
+
+.filter-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 16px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.filter-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-chip {
+  flex-shrink: 0;
+  padding: 7px 16px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  background: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-chip:hover {
+  border-color: var(--royal);
+  color: var(--royal);
+}
+
+.filter-chip.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+
+/* --- Loading State --- */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 24px;
+  color: var(--gray-500);
+  font-size: 0.9rem;
+}
+
+/* --- Student List --- */
+.student-list {
+  padding-top: 12px;
+}
+
+/* --- Discover Student Card --- */
+.discover-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  margin-bottom: 10px;
+  animation: fadeInUp 0.3s ease forwards;
+  opacity: 0;
+}
+
+.discover-card:nth-child(1) { animation-delay: 0s; }
+.discover-card:nth-child(2) { animation-delay: 0.05s; }
+.discover-card:nth-child(3) { animation-delay: 0.1s; }
+.discover-card:nth-child(4) { animation-delay: 0.15s; }
+.discover-card:nth-child(5) { animation-delay: 0.2s; }
+.discover-card:nth-child(6) { animation-delay: 0.25s; }
+
+.discover-card-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.discover-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--white);
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.discover-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.discover-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--gray-900);
+  margin-bottom: 1px;
+}
+
+.discover-email {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}
+
+/* --- Shared Classes Tags --- */
+.shared-classes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.shared-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: var(--sky-light);
+  color: var(--royal);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.shared-tag svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* --- Card Actions --- */
+.discover-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.discover-actions .btn {
+  flex: 1;
+}
+
+/* --- Friend Request States --- */
+.btn-pending {
+  background: var(--gray-100);
+  color: var(--gray-500);
+  cursor: default;
+}
+
+.btn-pending:hover {
+  background: var(--gray-100);
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-already-friends {
+  background: var(--success-light);
+  color: var(--success);
+  cursor: default;
+}
+
+.btn-already-friends:hover {
+  background: var(--success-light);
+  box-shadow: none;
+  transform: none;
+}
+
+/* --- Notification Badge --- */
+.nav-item {
+  position: relative;
+}
+
+.nav-badge {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  background: var(--danger);
+  color: var(--white);
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--white);
+}

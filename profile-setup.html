@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#002E5D">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Profile Setup — BYU Study Connect</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/profile-setup.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+</head>
+<body>
+  <div class="auth-page">
+
+    <!-- Brand Header -->
+    <div class="brand" style="padding-top: 40px; padding-bottom: 20px;">
+      <h1>Set Up Your Profile</h1>
+      <p>Pick your classes and availability so we can find you study partners.</p>
+    </div>
+
+    <!-- Setup Card -->
+    <div class="auth-card setup-card">
+
+      <!-- Step Indicator -->
+      <div class="steps-indicator">
+        <div class="step active" id="step-dot-1"><span>1</span> Basics</div>
+        <div class="step-line"></div>
+        <div class="step" id="step-dot-2"><span>2</span> Classes</div>
+        <div class="step-line"></div>
+        <div class="step" id="step-dot-3"><span>3</span> Availability</div>
+      </div>
+
+      <!-- Error/Success Message -->
+      <div id="setup-message" class="message"></div>
+
+      <!-- ========== STEP 1: Basic Info ========== -->
+      <div id="step-1" class="setup-step">
+        <h2 class="step-title">Your Info</h2>
+
+        <!-- Profile Photo -->
+        <div class="photo-upload" id="photo-upload-area">
+          <div class="photo-preview" id="photo-preview">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="photo-upload-text">
+            <span class="photo-upload-label">Upload a profile photo</span>
+            <span class="photo-upload-hint">Optional — we'll use your initials if you skip this</span>
+          </div>
+          <input type="file" id="photo-input" accept="image/*" class="hidden">
+        </div>
+
+        <div class="form-group">
+          <label for="display-name">Display Name</label>
+          <input type="text" id="display-name" placeholder="e.g. John Doe">
+        </div>
+
+        <div class="form-group">
+          <label for="contact-email">Contact Email</label>
+          <input type="email" id="contact-email" placeholder="The email friends will see">
+        </div>
+
+        <div class="form-group">
+          <label for="contact-phone">Phone Number</label>
+          <input type="tel" id="contact-phone" placeholder="e.g. (801) 555-1234">
+        </div>
+
+        <button class="btn btn-primary" onclick="goToStep(2)">Next — Pick Classes</button>
+      </div>
+
+      <!-- ========== STEP 2: Class Selection ========== -->
+      <div id="step-2" class="setup-step hidden">
+        <h2 class="step-title">Your Classes</h2>
+        <p class="step-subtitle">Search or browse to add your current classes.</p>
+
+        <!-- Search -->
+        <div class="form-group">
+          <input type="text" id="class-search" placeholder="Search classes (e.g. MATH 112, Biology)">
+        </div>
+
+        <!-- Selected Classes -->
+        <div id="selected-classes" class="selected-classes hidden">
+          <label>Your Classes</label>
+          <div id="selected-classes-list" class="chip-list"></div>
+        </div>
+
+        <!-- Class List -->
+        <div id="class-list" class="class-list"></div>
+
+        <div class="step-buttons">
+          <button class="btn btn-secondary" onclick="goToStep(1)">Back</button>
+          <button class="btn btn-primary" onclick="goToStep(3)">Next — Set Availability</button>
+        </div>
+      </div>
+
+      <!-- ========== STEP 3: Availability ========== -->
+      <div id="step-3" class="setup-step hidden">
+        <h2 class="step-title">Your Availability</h2>
+        <p class="step-subtitle">Tap time blocks when you're free to study. This helps us match you with classmates who have similar schedules.</p>
+
+        <!-- Availability Grid -->
+        <div class="availability-wrapper">
+          <div class="availability-grid" id="availability-grid">
+            <!-- Built by JavaScript -->
+          </div>
+        </div>
+
+        <div class="availability-legend">
+          <div class="legend-item">
+            <div class="legend-box available"></div>
+            <span>Available</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-box unavailable"></div>
+            <span>Unavailable</span>
+          </div>
+        </div>
+
+        <button class="btn btn-secondary btn-small" onclick="clearAvailability()" style="margin-bottom: 16px;">Clear All</button>
+
+        <div class="step-buttons">
+          <button class="btn btn-secondary" onclick="goToStep(2)">Back</button>
+          <button class="btn btn-primary" id="save-btn" onclick="saveProfile()">Save & Continue</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="js/profile-setup.js"></script>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay hidden" id="confirm-modal">
+    <div class="modal-card">
+      <div class="modal-icon">👋</div>
+      <h3 class="modal-title">Just so you know</h3>
+      <p class="modal-text">When someone becomes your friend on BYU Study Connect, they'll be able to see your:</p>
+      <ul class="modal-list">
+        <li>📧 School email</li>
+        <li>📱 Phone number</li>
+        <li>📅 Availability schedule</li>
+      </ul>
+      <p class="modal-text">This helps study partners coordinate, but make sure you're comfortable sharing this info.</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeConfirmModal()">Go Back</button>
+        <button class="btn btn-primary" onclick="confirmSaveProfile()">I Understand, Save</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

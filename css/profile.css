@@ -1,0 +1,213 @@
+/* ============================================
+   PROFILE VIEW PAGE - Styles
+   ============================================ */
+
+/* --- Loading --- */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 24px;
+  color: var(--gray-500);
+  font-size: 0.9rem;
+}
+
+/* --- Header Edit Button --- */
+.header-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-full);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.header-edit-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* --- Profile Hero --- */
+.profile-hero {
+  background: linear-gradient(170deg, var(--navy) 0%, var(--navy-light) 100%);
+  padding: 32px 20px 28px;
+  text-align: center;
+  position: relative;
+}
+
+.profile-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--white);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  background-size: cover;
+  background-position: center;
+}
+
+.profile-name {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.profile-email {
+  font-size: 0.88rem;
+  color: var(--sky);
+}
+
+/* --- Profile Sections --- */
+.profile-section {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  padding: 18px;
+  margin-bottom: 12px;
+}
+
+.profile-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 4px;
+}
+
+.profile-section-header svg {
+  color: var(--royal);
+}
+
+.profile-section-note {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  margin-bottom: 14px;
+  padding-left: 26px;
+}
+
+/* --- Detail Rows --- */
+.profile-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.profile-detail-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.profile-detail-label {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.profile-detail-value {
+  font-size: 0.85rem;
+  color: var(--gray-900);
+  font-weight: 600;
+  text-align: right;
+}
+
+/* --- Classes Chips --- */
+.profile-classes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.profile-class-tag {
+  padding: 5px 12px;
+  background: var(--sky-light);
+  color: var(--royal);
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* --- Mini Availability Grid --- */
+.profile-avail-grid {
+  display: grid;
+  grid-template-columns: 48px repeat(7, 1fr);
+  min-width: 360px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.profile-avail-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pavail-corner {
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.pavail-header {
+  font-size: 0.63rem;
+  font-weight: 700;
+  color: var(--navy);
+  text-align: center;
+  padding: 6px 2px;
+  text-transform: uppercase;
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.pavail-time {
+  font-size: 0.6rem;
+  color: var(--gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  background: var(--gray-50);
+  border-right: 1px solid var(--gray-200);
+}
+
+.pavail-cell {
+  height: 20px;
+  background: var(--gray-100);
+  border: 1px solid var(--white);
+}
+
+.pavail-cell.active {
+  background: var(--royal);
+}
+
+/* --- Sign Out --- */
+.sign-out-btn {
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+/* --- Page Content Padding --- */
+.page-content {
+  padding: 16px;
+}
