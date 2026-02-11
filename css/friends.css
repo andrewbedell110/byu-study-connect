@@ -1,28 +1,30 @@
 /* ============================================
-   FRIENDS PAGE - Additional Styles
+   FRIENDS PAGE — Luminous Campus
    ============================================ */
 
 /* --- Friends Tabs --- */
 .friends-tabs {
   display: flex;
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--gray-200);
   position: sticky;
-  top: 56px;
+  top: 58px;
   z-index: 99;
 }
 
 .friends-tab {
   flex: 1;
-  padding: 14px 16px;
+  padding: 15px 16px;
   border: none;
   background: none;
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--gray-500);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--gray-400);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s var(--ease-out-expo);
   position: relative;
   display: flex;
   align-items: center;
@@ -31,17 +33,17 @@
 }
 
 .friends-tab.active {
-  color: var(--navy);
+  color: var(--gray-900);
 }
 
 .friends-tab.active::after {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 16px;
-  right: 16px;
+  left: 20%;
+  right: 20%;
   height: 3px;
-  background: var(--navy);
+  background: linear-gradient(90deg, var(--blue-500), var(--blue-600));
   border-radius: 3px 3px 0 0;
 }
 
@@ -49,24 +51,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
   border-radius: var(--radius-full);
   background: var(--gray-100);
-  color: var(--gray-500);
+  color: var(--gray-400);
   font-size: 0.72rem;
   font-weight: 700;
 }
 
 .friends-tab.active .tab-count {
-  background: var(--sky-light);
-  color: var(--royal);
+  background: var(--blue-50);
+  color: var(--blue-600);
 }
 
 .tab-count.has-items {
-  background: var(--danger);
+  background: var(--rose-500);
   color: var(--white);
+  animation: scaleIn 0.3s var(--ease-spring);
 }
 
 /* --- Loading State --- */
@@ -74,36 +77,42 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 60px 24px;
+  gap: 14px;
+  padding: 72px 24px;
   color: var(--gray-500);
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
 /* --- Friend Card --- */
 .friend-card {
   background: var(--white);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--gray-100);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   overflow: hidden;
-  animation: fadeInUp 0.3s ease forwards;
+  animation: fadeInUp 0.4s var(--ease-out-expo) forwards;
   opacity: 0;
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.friend-card:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .friend-card:nth-child(1) { animation-delay: 0s; }
-.friend-card:nth-child(2) { animation-delay: 0.05s; }
-.friend-card:nth-child(3) { animation-delay: 0.1s; }
-.friend-card:nth-child(4) { animation-delay: 0.15s; }
+.friend-card:nth-child(2) { animation-delay: 0.06s; }
+.friend-card:nth-child(3) { animation-delay: 0.12s; }
+.friend-card:nth-child(4) { animation-delay: 0.18s; }
 
 .friend-card-header {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 16px 18px;
+  padding: 18px 20px;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.2s ease;
 }
 
 .friend-card-header:hover {
@@ -111,9 +120,9 @@
 }
 
 .friend-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,33 +141,38 @@
 }
 
 .friend-name {
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.95rem;
   color: var(--gray-900);
   margin-bottom: 2px;
+  letter-spacing: -0.2px;
 }
 
 .friend-shared {
   font-size: 0.8rem;
   color: var(--gray-500);
+  font-weight: 500;
 }
 
 .friend-expand-icon {
   color: var(--gray-300);
-  transition: transform 0.2s ease;
+  transition: transform 0.3s var(--ease-out-expo);
   flex-shrink: 0;
 }
 
 .friend-card.expanded .friend-expand-icon {
   transform: rotate(180deg);
+  color: var(--blue-500);
 }
 
 /* --- Friend Card Expanded Details --- */
 .friend-details {
   display: none;
   border-top: 1px solid var(--gray-100);
-  padding: 16px 18px;
+  padding: 20px;
   background: var(--gray-50);
+  animation: fadeIn 0.2s ease;
 }
 
 .friend-card.expanded .friend-details {
@@ -169,16 +183,21 @@
 .friend-contact {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
+  gap: 12px;
+  padding: 12px 16px;
   background: var(--white);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   margin-bottom: 14px;
   border: 1px solid var(--gray-200);
+  transition: border-color 0.2s ease;
+}
+
+.friend-contact:hover {
+  border-color: var(--blue-200);
 }
 
 .friend-contact svg {
-  color: var(--royal);
+  color: var(--blue-500);
   flex-shrink: 0;
 }
 
@@ -187,58 +206,60 @@
 }
 
 .friend-contact-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--gray-500);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--gray-400);
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
 }
 
 .friend-contact-value {
   font-size: 0.9rem;
   color: var(--gray-900);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .friend-contact-value a {
-  color: var(--royal);
+  color: var(--blue-600);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .friend-contact-value a:hover {
+  color: var(--blue-700);
   text-decoration: underline;
 }
 
 /* Shared Classes List */
 .friend-section-label {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: var(--gray-700);
-  margin-bottom: 8px;
+  color: var(--gray-600);
+  margin-bottom: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
 }
 
 .friend-classes {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .friend-class-tag {
-  padding: 4px 10px;
-  background: var(--sky-light);
-  color: var(--royal);
+  padding: 5px 12px;
+  background: var(--blue-50);
+  color: var(--blue-700);
   border-radius: var(--radius-full);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* --- Availability Comparison --- */
 .availability-compare {
   background: var(--white);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   border: 1px solid var(--gray-200);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -253,11 +274,11 @@
 .compare-header {
   font-size: 0.65rem;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--gray-600);
   text-align: center;
   padding: 8px 2px;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
   background: var(--gray-50);
   border-bottom: 1px solid var(--gray-200);
 }
@@ -281,31 +302,32 @@
 
 .compare-cell {
   height: 22px;
-  border: 1px solid var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   background: var(--gray-100);
+  transition: background 0.15s ease;
 }
 
-/* Both available — highlighted */
+/* Both available — highlighted with gradient */
 .compare-cell.both {
-  background: var(--royal);
+  background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
 }
 
 /* Only you */
 .compare-cell.you-only {
-  background: var(--sky);
+  background: var(--blue-100);
 }
 
 /* Only them */
 .compare-cell.them-only {
-  background: #B8D4E8;
+  background: var(--amber-100);
 }
 
 /* --- Compare Legend --- */
 .compare-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  padding: 10px 14px;
+  gap: 14px;
+  padding: 12px 16px;
   border-top: 1px solid var(--gray-200);
   background: var(--gray-50);
 }
@@ -313,37 +335,42 @@
 .compare-legend-item {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   font-size: 0.7rem;
   color: var(--gray-500);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .compare-legend-box {
   width: 14px;
   height: 14px;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
-.compare-legend-box.both { background: var(--royal); }
-.compare-legend-box.you-only { background: var(--sky); }
-.compare-legend-box.them-only { background: #B8D4E8; }
+.compare-legend-box.both { background: linear-gradient(135deg, var(--blue-500), var(--blue-600)); }
+.compare-legend-box.you-only { background: var(--blue-100); }
+.compare-legend-box.them-only { background: var(--amber-100); }
 
 /* --- Request Card --- */
 .request-card {
   background: var(--white);
-  border-radius: var(--radius-md);
-  padding: 18px;
+  border-radius: var(--radius-lg);
+  padding: 20px;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--gray-100);
-  margin-bottom: 10px;
-  animation: fadeInUp 0.3s ease forwards;
+  margin-bottom: 12px;
+  animation: fadeInUp 0.4s var(--ease-out-expo) forwards;
   opacity: 0;
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.request-card:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .request-card:nth-child(1) { animation-delay: 0s; }
-.request-card:nth-child(2) { animation-delay: 0.05s; }
-.request-card:nth-child(3) { animation-delay: 0.1s; }
+.request-card:nth-child(2) { animation-delay: 0.06s; }
+.request-card:nth-child(3) { animation-delay: 0.12s; }
 
 .request-top {
   display: flex;
@@ -353,9 +380,9 @@
 }
 
 .request-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -371,22 +398,25 @@
 }
 
 .request-name {
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.95rem;
   color: var(--gray-900);
   margin-bottom: 2px;
+  letter-spacing: -0.2px;
 }
 
 .request-shared {
   font-size: 0.8rem;
   color: var(--gray-500);
+  font-weight: 500;
 }
 
 .request-classes {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .request-actions {
@@ -400,5 +430,5 @@
 
 /* --- Padding for first card --- */
 #friends-list, #requests-list {
-  padding-top: 12px;
+  padding-top: 14px;
 }

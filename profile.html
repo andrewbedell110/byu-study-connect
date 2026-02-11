@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#002E5D">
+  <meta name="theme-color" content="#0F1B2D">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Profile — BYU Study Connect</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/profile.css">
+  <link rel="stylesheet" href="css/profile-setup.css">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="images/icon-192.png">
 </head>
@@ -17,15 +18,11 @@
     <!-- Header -->
     <div class="app-header">
       <h1>My Profile</h1>
-      <button class="header-edit-btn" onclick="window.location.href='profile-setup.html'">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
-        Edit
-      </button>
     </div>
 
     <!-- Loading -->
     <div id="loading-state" class="loading-state">
-      <div class="spinner" style="border-color: rgba(0,46,93,0.15); border-top-color: var(--navy); width: 32px; height: 32px;"></div>
+      <div class="spinner" style="border-color: rgba(59, 130, 246, 0.15); border-top-color: var(--blue-600); width: 32px; height: 32px;"></div>
     </div>
 
     <!-- Profile Content -->
@@ -40,40 +37,93 @@
 
       <div class="page-content">
 
+        <div id="profile-message" class="message"></div>
+
         <!-- Contact Info Section -->
-        <div class="profile-section">
+        <div class="profile-section" id="section-contact">
           <div class="profile-section-header">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             Contact Info
+            <button class="section-edit-btn" onclick="enterEditMode('contact')" title="Edit contact info">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+            </button>
           </div>
-          <div class="profile-section-note">Visible to friends only</div>
-          <div class="profile-detail-row">
-            <span class="profile-detail-label">Email</span>
-            <span class="profile-detail-value" id="profile-detail-email"></span>
+          <div id="contact-view">
+            <div class="profile-section-note">Visible to friends only</div>
+            <div class="profile-detail-row">
+              <span class="profile-detail-label">Email</span>
+              <span class="profile-detail-value" id="profile-detail-email"></span>
+            </div>
+            <div class="profile-detail-row" id="phone-row">
+              <span class="profile-detail-label">Phone</span>
+              <span class="profile-detail-value" id="profile-detail-phone"></span>
+            </div>
           </div>
-          <div class="profile-detail-row" id="phone-row">
-            <span class="profile-detail-label">Phone</span>
-            <span class="profile-detail-value" id="profile-detail-phone"></span>
+          <div id="contact-edit" class="hidden">
+            <div class="form-group"><label>Email</label><input type="email" id="edit-email" class="input"></div>
+            <div class="form-group"><label>Phone</label><input type="tel" id="edit-phone" class="input"></div>
+            <div class="edit-actions">
+              <button class="btn btn-secondary" onclick="cancelEdit('contact')">Cancel</button>
+              <button class="btn btn-primary" onclick="saveSection('contact')">Save</button>
+            </div>
           </div>
         </div>
 
         <!-- Classes Section -->
-        <div class="profile-section">
+        <div class="profile-section" id="section-classes">
           <div class="profile-section-header">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
             My Classes
+            <button class="section-edit-btn" onclick="enterEditMode('classes')" title="Edit classes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+            </button>
           </div>
-          <div class="profile-classes" id="profile-classes"></div>
+          <div id="classes-view">
+            <div class="profile-classes" id="profile-classes"></div>
+          </div>
+          <div id="classes-edit" class="hidden">
+            <div id="inline-selected-classes" class="selected-classes hidden">
+              <label>Selected</label>
+              <div class="chip-list" id="inline-selected-classes-list"></div>
+            </div>
+            <input type="text" class="input" id="inline-class-search" placeholder="Search classes..." style="width:100%;padding:13px 16px;border:2px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:0.95rem;font-weight:500;color:var(--gray-900);background:var(--gray-50);outline:none;margin-bottom:12px;">
+            <div class="class-list" id="inline-class-list"></div>
+            <div class="edit-actions">
+              <button class="btn btn-secondary" onclick="cancelEdit('classes')">Cancel</button>
+              <button class="btn btn-primary" onclick="saveSection('classes')">Save</button>
+            </div>
+          </div>
         </div>
 
         <!-- Availability Section -->
-        <div class="profile-section">
+        <div class="profile-section" id="section-availability">
           <div class="profile-section-header">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             My Availability
+            <button class="section-edit-btn" onclick="enterEditMode('availability')" title="Edit availability">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+            </button>
           </div>
-          <div class="profile-section-note">Visible to friends only</div>
-          <div class="profile-availability" id="profile-availability"></div>
+          <div id="availability-view">
+            <div class="profile-section-note">Visible to friends only</div>
+            <div class="profile-availability" id="profile-availability"></div>
+          </div>
+          <div id="availability-edit" class="hidden">
+            <div class="availability-legend">
+              <div class="legend-item"><div class="legend-box available"></div> Available</div>
+              <div class="legend-item"><div class="legend-box unavailable"></div> Unavailable</div>
+            </div>
+            <div class="availability-wrapper">
+              <div class="availability-grid" id="inline-availability-grid"></div>
+            </div>
+            <div style="text-align:right;margin-bottom:12px;">
+              <button class="btn btn-secondary btn-small" onclick="inlineClearAvailability()">Clear All</button>
+            </div>
+            <div class="edit-actions">
+              <button class="btn btn-secondary" onclick="cancelEdit('availability')">Cancel</button>
+              <button class="btn btn-primary" onclick="saveSection('availability')">Save</button>
+            </div>
+          </div>
         </div>
 
         <!-- Sign Out -->

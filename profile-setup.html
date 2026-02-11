@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#002E5D">
+  <meta name="theme-color" content="#070E1A">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Profile Setup — BYU Study Connect</title>
   <link rel="stylesheet" href="css/style.css">
@@ -14,8 +14,13 @@
 <body>
   <div class="auth-page">
 
+    <!-- Animated Background Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
     <!-- Brand Header -->
-    <div class="brand" style="padding-top: 40px; padding-bottom: 20px;">
+    <div class="brand" style="padding-top: 44px; padding-bottom: 24px;">
       <h1>Set Up Your Profile</h1>
       <p>Pick your classes and availability so we can find you study partners.</p>
     </div>
@@ -117,7 +122,7 @@
           </div>
         </div>
 
-        <button class="btn btn-secondary btn-small" onclick="clearAvailability()" style="margin-bottom: 16px;">Clear All</button>
+        <button class="btn btn-secondary btn-small" onclick="clearAvailability()" style="margin-bottom: 18px;">Clear All</button>
 
         <div class="step-buttons">
           <button class="btn btn-secondary" onclick="goToStep(2)">Back</button>
@@ -133,13 +138,15 @@
   <!-- Confirmation Modal -->
   <div class="modal-overlay hidden" id="confirm-modal">
     <div class="modal-card">
-      <div class="modal-icon">👋</div>
+      <div class="modal-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--blue-500)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
       <h3 class="modal-title">Just so you know</h3>
       <p class="modal-text">When someone becomes your friend on BYU Study Connect, they'll be able to see your:</p>
       <ul class="modal-list">
-        <li>📧 School email</li>
-        <li>📱 Phone number</li>
-        <li>📅 Availability schedule</li>
+        <li>School email</li>
+        <li>Phone number</li>
+        <li>Availability schedule</li>
       </ul>
       <p class="modal-text">This helps study partners coordinate, but make sure you're comfortable sharing this info.</p>
       <div class="modal-actions">
