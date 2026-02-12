@@ -221,7 +221,7 @@ async function findClassmates() {
   } catch (error) {
     console.error('Error finding classmates:', error);
     document.getElementById('loading-state').innerHTML =
-      '<p style="color: var(--danger);">Something went wrong loading classmates. Try refreshing.</p>';
+      '<p style="color: var(--rose-600);">Something went wrong loading classmates. Try refreshing.</p>';
   }
 }
 

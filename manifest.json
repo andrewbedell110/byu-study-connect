@@ -1,6 +1,6 @@
 {
-  "name": "BYU Study Connect",
-  "short_name": "StudyConnect",
+  "name": "BYU Synapse",
+  "short_name": "BYU Synapse",
   "description": "Find classmates. Form study groups. Ace your classes.",
   "start_url": "./index.html",
   "display": "standalone",
