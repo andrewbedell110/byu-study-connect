@@ -89,12 +89,12 @@ window.goToStep = function(step) {
   // Show target step
   document.getElementById(`step-${step}`).classList.remove('hidden');
 
-  // Update step indicators
+  // Update step indicators (segmented bar)
   for (let i = 1; i <= 3; i++) {
-    const dot = document.getElementById(`step-dot-${i}`);
-    dot.classList.remove('active', 'completed');
-    if (i < step) dot.classList.add('completed');
-    if (i === step) dot.classList.add('active');
+    const segment = document.getElementById(`step-dot-${i}`);
+    segment.classList.remove('active', 'completed');
+    if (i < step) segment.classList.add('completed');
+    if (i === step) segment.classList.add('active');
   }
 
   // Clear messages
@@ -369,7 +369,7 @@ window.confirmSaveProfile = async function() {
     showMessage('Profile saved! Redirecting...', 'success');
 
     setTimeout(() => {
-      window.location.href = 'discover.html';
+      window.location.href = 'pasture.html';
     }, 1000);
 
   } catch (error) {

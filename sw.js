@@ -1,7 +1,5 @@
-// Service Worker for BYU Synapse PWA
-// This enables the "Add to Home Screen" functionality
-
-const CACHE_NAME = 'byu-synapse-v1';
+// Service Worker for Herd PWA
+const CACHE_NAME = 'herd-v1';
 
 // Install event
 self.addEventListener('install', (event) => {
@@ -10,7 +8,13 @@ self.addEventListener('install', (event) => {
 
 // Activate event
 self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))
+      );
+    }).then(() => clients.claim())
+  );
 });
 
 // Fetch event - network first, fall back to cache
@@ -18,7 +22,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Clone and cache successful responses
         if (response.status === 200) {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -28,7 +31,6 @@ self.addEventListener('fetch', (event) => {
         return response;
       })
       .catch(() => {
-        // If network fails, try cache
         return caches.match(event.request);
       })
   );

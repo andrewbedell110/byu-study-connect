@@ -3,13 +3,195 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#070E1A">
+  <meta name="theme-color" content="#FDFBF0">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>BYU Synapse</title>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Herd</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="images/icon-192.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+  <style>
+    .login-page {
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Floating blobs */
+    .login-page .blob-bg {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+    .login-page .blob-bg-1 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, var(--sage-300), transparent 70%);
+      top: -8%; right: -10%;
+      animation: blobFloat1 16s ease-in-out infinite;
+    }
+    .login-page .blob-bg-2 {
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, var(--amber-300), transparent 70%);
+      bottom: 15%; left: -15%;
+      animation: blobFloat2 20s ease-in-out infinite;
+    }
+    .login-page .blob-bg-3 {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, var(--emerald-300), transparent 70%);
+      top: 35%; left: 60%;
+      animation: blobFloat3 14s ease-in-out infinite;
+    }
+
+    @keyframes blobFloat1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-20px, 30px) scale(1.1); }
+    }
+    @keyframes blobFloat2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, -20px) scale(1.05); }
+    }
+    @keyframes blobFloat3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-25px, 20px) scale(1.1); }
+    }
+
+    /* Brand / Mascot area */
+    .login-brand {
+      text-align: center;
+      padding: 60px 24px 28px;
+      position: relative;
+      z-index: 2;
+      animation: fadeInUp 0.6s var(--ease-out-expo) forwards;
+    }
+
+    .mascot-bubble {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 16px;
+      background: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      border: 3px solid var(--sage-100);
+      font-size: 52px;
+      line-height: 1;
+    }
+
+    .login-brand h1 {
+      font-family: var(--font-handwritten);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--green-800);
+      letter-spacing: -1px;
+      margin-bottom: 6px;
+    }
+
+    .login-brand p {
+      font-family: var(--font-display);
+      color: var(--sage-500);
+      font-size: 0.95rem;
+      font-weight: 600;
+      max-width: 280px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Auth Card */
+    .login-card {
+      position: relative;
+      z-index: 2;
+      background: var(--white);
+      border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+      padding: 32px 28px 48px;
+      flex: 1;
+      box-shadow: 0 -6px 30px rgba(74, 124, 89, 0.08);
+      animation: cardSlideUp 0.5s var(--ease-out-expo) 0.15s forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    @keyframes cardSlideUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Tabs */
+    .auth-tabs {
+      display: flex;
+      background: var(--sage-50);
+      border-radius: var(--radius-full);
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 11px 18px;
+      border: none;
+      background: none;
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--gray-400);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out-expo);
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-tab.active {
+      background: var(--white);
+      color: var(--green-800);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Grass at bottom */
+    .login-grass {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .login-grass::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 35px;
+      background: linear-gradient(135deg, var(--sage-300) 0%, var(--sage-400) 100%);
+      clip-path: polygon(0% 100%, 2% 55%, 5% 100%, 8% 40%, 12% 100%, 15% 50%, 19% 100%, 22% 35%, 26% 100%, 29% 55%, 33% 100%, 36% 45%, 40% 100%, 43% 50%, 47% 100%, 50% 40%, 54% 100%, 57% 55%, 61% 100%, 64% 45%, 68% 100%, 71% 50%, 75% 100%, 78% 35%, 82% 100%, 85% 55%, 89% 100%, 92% 45%, 96% 100%, 100% 55%, 100% 100%);
+      opacity: 0.5;
+    }
+
+    @media (min-width: 600px) {
+      .login-page {
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+      }
+      .login-card {
+        border-radius: var(--radius-2xl);
+        max-width: 440px;
+        flex: initial;
+        box-shadow: var(--shadow-xl);
+      }
+      .login-brand {
+        padding: 0 24px 28px;
+      }
+    }
+  </style>
 </head>
 <body>
   <script>
@@ -17,24 +199,24 @@
       navigator.serviceWorker.register('./sw.js');
     }
   </script>
-  <div class="auth-page">
+  <div class="login-page">
 
-    <!-- Animated Background Orbs -->
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+    <!-- Floating blobs -->
+    <div class="blob-bg blob-bg-1"></div>
+    <div class="blob-bg blob-bg-2"></div>
+    <div class="blob-bg blob-bg-3"></div>
 
     <!-- Brand Header -->
-    <div class="brand">
-      <div class="brand-icon">
-        <img src="images/icon-192.png" alt="BYU Synapse" width="64" height="64" style="border-radius: var(--radius-lg);">
+    <div class="login-brand">
+      <div class="mascot-bubble">
+        <img src="images/herd-icon-48.png" alt="Herd" style="width: 48px; height: 48px; border-radius: 12px;">
       </div>
-      <h1>BYU Synapse</h1>
-      <p>Find classmates. Form study groups. Ace your classes.</p>
+      <h1>Herd</h1>
+      <p>Find your herd. Study together. Graze through finals.</p>
     </div>
 
     <!-- Auth Card -->
-    <div class="auth-card">
+    <div class="login-card">
 
       <!-- Tabs -->
       <div class="auth-tabs">
@@ -84,6 +266,9 @@
       </div>
 
     </div>
+
+    <!-- Grass at bottom -->
+    <div class="login-grass"></div>
   </div>
 
   <script type="module" src="js/auth.js"></script>

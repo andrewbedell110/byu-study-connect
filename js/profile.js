@@ -6,30 +6,14 @@ import {
 import {
   doc,
   getDoc,
-  setDoc
+  setDoc,
+  getDocs,
+  collection,
+  query,
+  where
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 import BYU_CLASSES from './byu-classes.js';
-
-// ============================================
-// AVATAR HELPERS
-// ============================================
-const AVATAR_COLORS = [
-  '#002E5D', '#0062B8', '#1E88E5', '#00838F',
-  '#2E7D32', '#558B2F', '#E65100', '#AD1457',
-  '#6A1B9A', '#4527A0', '#283593', '#C62828'
-];
-
-function getAvatarColor(uid) {
-  let hash = 0;
-  for (let i = 0; i < uid.length; i++) {
-    hash = uid.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
-}
-
-function getInitials(name) {
-  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-}
+import { getAvatarColor, getInitials } from './shared.js';
 
 // ============================================
 // AVAILABILITY CONSTANTS
@@ -74,6 +58,7 @@ onAuthStateChanged(auth, async (user) => {
 
   userData = userDoc.data();
   renderProfile(userData, user);
+  loadHerdStats();
 
   // Show content
   document.getElementById('loading-state').classList.add('hidden');
@@ -125,6 +110,26 @@ function renderClassesView(data) {
     }).join('');
   } else {
     classesEl.innerHTML = '<p style="color: var(--gray-500); font-size: 0.85rem;">No classes added yet.</p>';
+  }
+}
+
+// ============================================
+// LOAD HERD STATS
+// ============================================
+async function loadHerdStats() {
+  try {
+    const herdsQuery = query(
+      collection(db, 'herds'),
+      where('members', 'array-contains', currentUser.uid)
+    );
+    const snapshot = await getDocs(herdsQuery);
+    const herdCount = snapshot.size;
+
+    document.getElementById('stat-herds').textContent = herdCount;
+    // Estimate grazing hours (2 hrs per herd as placeholder)
+    document.getElementById('stat-hours').textContent = herdCount * 2;
+  } catch (error) {
+    console.error('Error loading herd stats:', error);
   }
 }
 

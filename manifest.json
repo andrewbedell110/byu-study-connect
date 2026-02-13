@@ -1,11 +1,11 @@
 {
-  "name": "BYU Synapse",
-  "short_name": "BYU Synapse",
-  "description": "Find classmates. Form study groups. Ace your classes.",
+  "name": "Herd",
+  "short_name": "Herd",
+  "description": "Find your herd. Study together. Graze through finals.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#002E5D",
-  "theme_color": "#002E5D",
+  "background_color": "#FDFBF0",
+  "theme_color": "#4A7C59",
   "orientation": "portrait",
   "icons": [
     {
