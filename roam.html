@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FDFBF0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Roam — Herd</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+  <style>
+    .roam-page .app-page { padding-bottom: 80px; }
+
+    /* Map area */
+    .map-container {
+      position: relative;
+      height: calc(100vh - 80px);
+      min-height: 500px;
+      overflow: hidden;
+      background: #e8efe4;
+    }
+
+    /* Grass/terrain base */
+    .map-terrain {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 25% 35%, #d4e4cc 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 70% 60%, #d0e0c8 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 50% 80%, #cddcc5 0%, transparent 70%),
+        linear-gradient(180deg, #e8efe4 0%, #dde8d6 100%);
+    }
+
+    /* Road grid */
+    .map-roads {
+      position: absolute;
+      inset: 0;
+    }
+    .map-road {
+      position: absolute;
+      background: #f5f2eb;
+      border: 1px solid #ddd8cc;
+    }
+    /* Horizontal roads */
+    .road-h1 { height: 8px; width: 100%; top: 22%; left: 0; }
+    .road-h2 { height: 10px; width: 85%; top: 48%; left: 8%; border-radius: 5px; }
+    .road-h3 { height: 7px; width: 70%; top: 72%; left: 15%; border-radius: 4px; }
+    /* Vertical roads */
+    .road-v1 { width: 8px; height: 65%; top: 15%; left: 20%; border-radius: 4px; }
+    .road-v2 { width: 10px; height: 80%; top: 10%; left: 50%; border-radius: 5px; }
+    .road-v3 { width: 7px; height: 55%; top: 25%; left: 78%; border-radius: 4px; }
+    /* Diagonal connector */
+    .road-d1 { width: 120px; height: 7px; top: 35%; left: 32%; transform: rotate(-20deg); border-radius: 4px; }
+
+    /* Campus buildings */
+    .map-bldg {
+      position: absolute;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .map-bldg-label {
+      font-family: var(--font-display);
+      font-size: 0.5rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-align: center;
+      line-height: 1.1;
+      padding: 2px;
+    }
+    /* Library - large */
+    .bldg-library {
+      width: 70px; height: 45px;
+      background: #c8b8a0;
+      border: 1.5px solid #b5a58d;
+      top: 26%; left: 38%;
+    }
+    .bldg-library .map-bldg-label { color: #6b5b47; }
+    /* Talmage */
+    .bldg-talmage {
+      width: 55px; height: 35px;
+      background: #c4b9a8;
+      border: 1.5px solid #b0a593;
+      top: 14%; left: 60%;
+    }
+    .bldg-talmage .map-bldg-label { color: #6b5b47; }
+    /* Engineering */
+    .bldg-eng {
+      width: 60px; height: 30px;
+      background: #bfb5a3;
+      border: 1.5px solid #ada393;
+      top: 55%; left: 58%;
+    }
+    .bldg-eng .map-bldg-label { color: #6b5b47; }
+    /* Wilk */
+    .bldg-wilk {
+      width: 65px; height: 40px;
+      background: #c2b7a5;
+      border: 1.5px solid #afa495;
+      top: 38%; left: 12%;
+    }
+    .bldg-wilk .map-bldg-label { color: #6b5b47; }
+    /* Testing Center */
+    .bldg-testing {
+      width: 50px; height: 30px;
+      background: #c0b6a5;
+      border: 1.5px solid #ada396;
+      top: 65%; left: 28%;
+    }
+    .bldg-testing .map-bldg-label { color: #6b5b47; }
+    /* JFSB */
+    .bldg-jfsb {
+      width: 55px; height: 32px;
+      background: #c6baa6;
+      border: 1.5px solid #b3a792;
+      top: 78%; left: 55%;
+    }
+    .bldg-jfsb .map-bldg-label { color: #6b5b47; }
+    /* RB */
+    .bldg-rb {
+      width: 45px; height: 45px;
+      background: #c1b5a0;
+      border: 1.5px solid #aea28e;
+      top: 30%; left: 72%;
+      border-radius: 6px;
+    }
+    .bldg-rb .map-bldg-label { color: #6b5b47; }
+    /* MARB */
+    .bldg-marb {
+      width: 48px; height: 28px;
+      background: #c3b8a6;
+      border: 1.5px solid #b0a594;
+      top: 82%; left: 18%;
+    }
+    .bldg-marb .map-bldg-label { color: #6b5b47; }
+
+    /* Green quad areas */
+    .map-quad {
+      position: absolute;
+      border-radius: 8px;
+      border: 1.5px dashed rgba(74, 124, 89, 0.2);
+    }
+    .quad-1 {
+      width: 60px; height: 40px;
+      background: rgba(74, 124, 89, 0.08);
+      top: 42%; left: 30%;
+    }
+    .quad-2 {
+      width: 45px; height: 35px;
+      background: rgba(74, 124, 89, 0.06);
+      top: 58%; left: 42%;
+    }
+
+    /* Tree dots */
+    .map-tree {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(74, 124, 89, 0.25);
+    }
+
+    /* Pin markers */
+    .map-marker {
+      position: absolute;
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s var(--ease-spring);
+    }
+    .map-marker:hover { transform: scale(1.15) translateY(-2px); }
+    .map-marker.active { transform: scale(1.25) translateY(-4px); z-index: 20; }
+
+    .marker-pin {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2.5px solid var(--white);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    .marker-pin::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+    }
+
+    .marker-pin.quiet {
+      background: var(--sage-500);
+    }
+    .marker-pin.quiet::after { border-top: 5px solid var(--sage-500); }
+    .marker-pin.casual {
+      background: var(--green-600);
+    }
+    .marker-pin.casual::after { border-top: 5px solid var(--green-600); }
+    .marker-pin.stampede {
+      background: #d97706;
+    }
+    .marker-pin.stampede::after { border-top: 5px solid #d97706; }
+
+    .marker-label {
+      margin-top: 6px;
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      background: rgba(255,255,255,0.92);
+      padding: 1px 6px;
+      border-radius: var(--radius-full);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Pulse ring on active marker */
+    .map-marker.active .marker-pin::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      opacity: 0.3;
+      animation: pin-pulse 1.5s infinite;
+    }
+    .marker-pin.quiet { color: var(--sage-500); }
+    .marker-pin.casual { color: var(--green-600); }
+    .marker-pin.stampede { color: #d97706; }
+
+    @keyframes pin-pulse {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+
+    /* User location pulse */
+    .user-pulse {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #3b82f6;
+      border: 3px solid var(--white);
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4), 0 1px 4px rgba(0,0,0,0.2);
+      animation: user-ping 2s infinite;
+      z-index: 15;
+      bottom: 38%;
+      left: 48%;
+    }
+
+    @keyframes user-ping {
+      0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4), 0 1px 4px rgba(0,0,0,0.2); }
+      70% { box-shadow: 0 0 0 18px rgba(59, 130, 246, 0), 0 1px 4px rgba(0,0,0,0.2); }
+      100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0), 0 1px 4px rgba(0,0,0,0.2); }
+    }
+
+    /* Search bar + filters */
+    .roam-search {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 30;
+    }
+
+    .roam-search-input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid rgba(0,0,0,0.08);
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--gray-800);
+      outline: none;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: border-color 0.2s ease;
+    }
+    .roam-search-input:focus {
+      border-color: var(--sage-400);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+    }
+
+    .roam-search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-400);
+      pointer-events: none;
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .filter-chip {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(0,0,0,0.06);
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(8px);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .filter-chip.active {
+      background: var(--sage-500);
+      color: var(--white);
+      border-color: var(--sage-500);
+      box-shadow: 0 2px 8px rgba(74, 124, 89, 0.25);
+    }
+
+    /* Legend */
+    .map-legend {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius-lg);
+      padding: 8px 12px;
+      display: flex;
+      gap: 12px;
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--gray-500);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      z-index: 25;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .legend-dot.quiet { background: var(--sage-500); }
+    .legend-dot.casual { background: var(--green-600); }
+    .legend-dot.stampede { background: #d97706; }
+
+    /* Bottom detail card */
+    .roam-detail {
+      position: fixed;
+      bottom: 80px;
+      left: 16px;
+      right: 16px;
+      max-width: 448px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      border-radius: var(--radius-xl);
+      padding: 18px 20px;
+      box-shadow: 0 -2px 20px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.06);
+      z-index: 30;
+      transform: translateY(120%);
+      transition: transform 0.3s var(--ease-out-expo);
+    }
+    .roam-detail.visible { transform: translateY(0); }
+
+    .roam-detail-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .roam-detail-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+    .roam-detail-meta {
+      font-size: 0.78rem;
+      color: var(--gray-500);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .roam-detail-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .roam-detail-meta .material-symbols-rounded { font-size: 16px; }
+
+    .roam-detail-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: var(--sage-50);
+      color: var(--gray-500);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .roam-detail-close .material-symbols-rounded { font-size: 18px; }
+  </style>
+</head>
+<body>
+  <div class="app-page">
+
+    <!-- Map Container -->
+    <div class="map-container" id="map-container">
+      <!-- Terrain -->
+      <div class="map-terrain"></div>
+
+      <!-- Roads -->
+      <div class="map-roads">
+        <div class="map-road road-h1"></div>
+        <div class="map-road road-h2"></div>
+        <div class="map-road road-h3"></div>
+        <div class="map-road road-v1"></div>
+        <div class="map-road road-v2"></div>
+        <div class="map-road road-v3"></div>
+        <div class="map-road road-d1"></div>
+      </div>
+
+      <!-- Quad areas -->
+      <div class="map-quad quad-1"></div>
+      <div class="map-quad quad-2"></div>
+
+      <!-- Trees -->
+      <div class="map-tree" style="top: 44%; left: 32%;"></div>
+      <div class="map-tree" style="top: 46%; left: 36%;"></div>
+      <div class="map-tree" style="top: 43%; left: 34%;"></div>
+      <div class="map-tree" style="top: 60%; left: 44%;"></div>
+      <div class="map-tree" style="top: 62%; left: 47%;"></div>
+      <div class="map-tree" style="top: 18%; left: 30%;"></div>
+      <div class="map-tree" style="top: 75%; left: 68%;"></div>
+      <div class="map-tree" style="top: 76%; left: 72%;"></div>
+      <div class="map-tree" style="top: 50%; left: 24%;"></div>
+      <div class="map-tree" style="top: 34%; left: 58%;"></div>
+
+      <!-- Campus buildings -->
+      <div class="map-bldg bldg-library"><span class="map-bldg-label">HBLL</span></div>
+      <div class="map-bldg bldg-talmage"><span class="map-bldg-label">Talmage</span></div>
+      <div class="map-bldg bldg-eng"><span class="map-bldg-label">EB</span></div>
+      <div class="map-bldg bldg-wilk"><span class="map-bldg-label">Wilk</span></div>
+      <div class="map-bldg bldg-testing"><span class="map-bldg-label">Testing</span></div>
+      <div class="map-bldg bldg-jfsb"><span class="map-bldg-label">JFSB</span></div>
+      <div class="map-bldg bldg-rb"><span class="map-bldg-label">RB</span></div>
+      <div class="map-bldg bldg-marb"><span class="map-bldg-label">MARB</span></div>
+
+      <!-- User location -->
+      <div class="user-pulse"></div>
+
+      <!-- Markers rendered by JS -->
+      <div id="map-markers"></div>
+
+      <!-- Search -->
+      <div class="roam-search">
+        <div style="position: relative;">
+          <span class="material-symbols-rounded roam-search-icon">search</span>
+          <input type="text" class="roam-search-input" id="roam-search" placeholder="Search herds nearby...">
+        </div>
+        <div class="filter-chips">
+          <button class="filter-chip active" onclick="filterHerds('all', this)">All</button>
+          <button class="filter-chip" onclick="filterHerds('quiet', this)">Quiet</button>
+          <button class="filter-chip" onclick="filterHerds('casual', this)">Social</button>
+          <button class="filter-chip" onclick="filterHerds('stampede', this)">Cram</button>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="map-legend">
+        <div class="legend-item"><div class="legend-dot quiet"></div> Quiet</div>
+        <div class="legend-item"><div class="legend-dot casual"></div> Social</div>
+        <div class="legend-item"><div class="legend-dot stampede"></div> Cram</div>
+        <div class="legend-item" style="gap: 3px;"><div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;"></div> You</div>
+      </div>
+    </div>
+
+    <!-- Detail Card -->
+    <div class="roam-detail" id="roam-detail">
+      <div class="roam-detail-header">
+        <div class="roam-detail-title" id="detail-title"></div>
+        <button class="roam-detail-close" onclick="closeDetail()">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+      <div class="roam-detail-meta" id="detail-meta"></div>
+      <button class="join-btn" id="detail-join-btn" style="width: 100%;">
+        <span class="material-symbols-rounded" style="font-size: 16px;">group_add</span>
+        Join Herd
+      </button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <a href="pasture.html" class="nav-item">
+        <span class="material-symbols-rounded">cottage</span>
+        Pasture
+      </a>
+      <a href="roam.html" class="nav-item active">
+        <span class="material-symbols-rounded">explore</span>
+        Roam
+      </a>
+      <a href="create-herd.html" class="nav-item nav-center-btn">
+        <span class="material-symbols-rounded">add</span>
+      </a>
+      <a href="herds.html" class="nav-item">
+        <span class="material-symbols-rounded">groups</span>
+        Herds
+      </a>
+      <a href="profile.html" class="nav-item">
+        <span class="material-symbols-rounded">person</span>
+        Profile
+      </a>
+    </nav>
+
+  </div>
+
+  <script type="module" src="js/roam.js"></script>
+</body>
+</html>

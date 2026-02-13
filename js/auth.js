@@ -157,7 +157,7 @@ window.handleLogin = async function() {
 
     if (userDoc.exists() && userDoc.data().profileSetup) {
       // Profile is complete — go to discover page
-      window.location.href = 'discover.html';
+      window.location.href = 'pasture.html';
     } else {
       // Profile not complete — go to profile setup
       window.location.href = 'profile-setup.html';
@@ -195,7 +195,7 @@ onAuthStateChanged(auth, async (user) => {
     // User is signed in — check if profile is set up
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (userDoc.exists() && userDoc.data().profileSetup) {
-      window.location.href = 'discover.html';
+      window.location.href = 'pasture.html';
     } else {
       window.location.href = 'profile-setup.html';
     }

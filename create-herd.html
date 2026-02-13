@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FDFBF0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Start a Herd — Herd</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+  <style>
+    .create-page {
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: var(--cream);
+    }
+
+    .create-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: var(--cream);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1.5px solid var(--sage-100);
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: var(--sage-50);
+      color: var(--gray-600);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .back-btn:hover { background: var(--sage-100); }
+    .back-btn .material-symbols-rounded { font-size: 20px; }
+
+    .create-header h1 {
+      font-family: var(--font-handwritten);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--green-800);
+    }
+
+    /* Mascot speech bubble */
+    .mascot-speech {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px 20px;
+      margin: 16px;
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      border: 1.5px solid var(--sage-100);
+    }
+    .mascot-speech .mascot { font-size: 36px; flex-shrink: 0; }
+    .mascot-speech .speech {
+      font-family: var(--font-handwritten);
+      font-size: 1.1rem;
+      color: var(--gray-700);
+      line-height: 1.5;
+    }
+
+    /* Form */
+    .create-form {
+      padding: 0 20px 100px;
+    }
+
+    .create-form .form-group {
+      margin-bottom: 24px;
+    }
+
+    .create-form .form-group label {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      text-transform: none;
+      letter-spacing: 0;
+      margin-bottom: 8px;
+    }
+
+    /* Quick-pick location chips */
+    .quick-picks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .quick-pick {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid var(--sage-200);
+      background: var(--white);
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .quick-pick:hover, .quick-pick.active {
+      background: var(--sage-50);
+      border-color: var(--sage-400);
+      color: var(--sage-600);
+    }
+
+    /* Style radio cards */
+    .style-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .style-card {
+      padding: 16px 12px;
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--sage-100);
+      background: var(--white);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s var(--ease-out-expo);
+    }
+    .style-card:hover {
+      border-color: var(--sage-300);
+    }
+    .style-card.active {
+      border-color: var(--sage-500);
+      background: var(--sage-50);
+      box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+    }
+    .style-card .style-icon {
+      font-size: 28px;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .style-card .style-name {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--gray-700);
+    }
+    .style-card .style-desc {
+      font-size: 0.7rem;
+      color: var(--gray-500);
+      margin-top: 2px;
+    }
+
+    .style-card input[type="radio"] { display: none; }
+
+    /* Date/time row */
+    .datetime-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .datetime-row input {
+      padding: 12px;
+      text-align: center;
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 500;
+      border: 2px solid var(--sage-200);
+      border-radius: var(--radius-full);
+      outline: none;
+      background: var(--white);
+      color: var(--gray-800);
+    }
+    .datetime-row input:focus {
+      border-color: var(--sage-500);
+      box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+    }
+
+    /* Submit button area */
+    .create-submit {
+      padding: 0 20px 40px;
+    }
+
+    /* Message */
+    .create-form .message {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="create-page">
+
+    <!-- Header -->
+    <div class="create-header">
+      <button class="back-btn" onclick="history.back()">
+        <span class="material-symbols-rounded">arrow_back</span>
+      </button>
+      <h1 id="page-title">Start a New Herd</h1>
+    </div>
+
+    <!-- Mascot -->
+    <div class="mascot-speech">
+      <img class="mascot" src="images/herd-icon-48.png" alt="Herd" style="width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;">
+      <div class="speech">Let's get your study group set up! Pick a name, place, and time.</div>
+    </div>
+
+    <!-- Form -->
+    <div class="create-form">
+      <div id="create-message" class="message"></div>
+
+      <div class="form-group">
+        <label for="herd-name">Herd Name</label>
+        <input type="text" id="herd-name" placeholder="e.g. Calculus Crisis Crew">
+      </div>
+
+      <div class="form-group">
+        <label>What class is this for?</label>
+        <div class="quick-picks" id="class-chips">
+          <!-- Populated by JS from user's enrolled classes -->
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="herd-location">Location</label>
+        <input type="text" id="herd-location" placeholder="Where will you meet?">
+        <div class="quick-picks">
+          <button class="quick-pick" onclick="pickLocation('Harold B. Lee Library', this)">Library</button>
+          <button class="quick-pick" onclick="pickLocation('Talmage Building', this)">Talmage</button>
+          <button class="quick-pick" onclick="pickLocation('Engineering Commons', this)">Engineering</button>
+          <button class="quick-pick" onclick="pickLocation('Wilkinson Center', this)">Wilk</button>
+          <button class="quick-pick" onclick="pickLocation('Testing Center', this)">Testing Ctr</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Grazing Style</label>
+        <div class="style-options">
+          <label class="style-card active" onclick="pickStyle('quiet', this)">
+            <input type="radio" name="style" value="quiet" checked>
+            <span class="style-icon">🤫</span>
+            <span class="style-name">Quiet</span>
+            <span class="style-desc">Focus mode</span>
+          </label>
+          <label class="style-card" onclick="pickStyle('casual', this)">
+            <input type="radio" name="style" value="casual">
+            <span class="style-icon">💬</span>
+            <span class="style-name">Casual</span>
+            <span class="style-desc">Chat & study</span>
+          </label>
+          <label class="style-card" onclick="pickStyle('stampede', this)">
+            <input type="radio" name="style" value="stampede">
+            <span class="style-icon">⚡</span>
+            <span class="style-name">Stampede</span>
+            <span class="style-desc">Cram session</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Who can join?</label>
+        <div class="style-options" style="grid-template-columns: repeat(2, 1fr);">
+          <label class="style-card active" onclick="pickVisibility('open', this)">
+            <span class="style-icon"><span class="material-symbols-rounded" style="font-size: 28px;">public</span></span>
+            <span class="style-name">Open</span>
+            <span class="style-desc">Anyone in this class</span>
+          </label>
+          <label class="style-card" onclick="pickVisibility('closed', this)">
+            <span class="style-icon"><span class="material-symbols-rounded" style="font-size: 28px;">lock</span></span>
+            <span class="style-name">Closed</span>
+            <span class="style-desc">Invite only</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Date & Time</label>
+        <div class="datetime-row">
+          <input type="date" id="herd-date">
+          <input type="time" id="herd-start" value="14:00">
+          <input type="time" id="herd-end" value="16:00">
+        </div>
+      </div>
+    </div>
+
+    <div class="create-submit">
+      <button class="btn btn-primary" id="create-btn" onclick="createHerd()">
+        <span class="material-symbols-rounded" style="font-size: 18px;">groups</span>
+        Create Herd
+      </button>
+    </div>
+
+  </div>
+
+  <script type="module" src="js/create-herd.js"></script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 /* ============================================
-   PROFILE VIEW PAGE — Luminous Campus
+   PROFILE VIEW PAGE — Herd Pastoral Theme
    ============================================ */
 
 /* --- Loading --- */
@@ -14,90 +14,41 @@
   font-weight: 500;
 }
 
-/* --- Header Edit Button --- */
-.header-edit-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: var(--radius-full);
-  color: var(--white);
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.25s var(--ease-out-expo);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.header-edit-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-
 /* --- Profile Hero --- */
 .profile-hero {
-  background: linear-gradient(160deg, var(--deep) 0%, var(--navy) 50%, var(--slate) 100%);
-  padding: 36px 20px 32px;
+  background: linear-gradient(160deg, var(--sage-50) 0%, var(--cream) 50%, var(--green-50) 100%);
+  padding: 36px 20px 28px;
   text-align: center;
   position: relative;
   overflow: hidden;
-}
-
-/* Decorative orb on profile hero */
-.profile-hero::before {
-  content: '';
-  position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.profile-hero::after {
-  content: '';
-  position: absolute;
-  bottom: -40px;
-  left: -40px;
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
-  pointer-events: none;
+  border-bottom: 1.5px solid var(--sage-100);
 }
 
 .profile-avatar {
   width: 96px;
   height: 96px;
-  border-radius: var(--radius-xl);
+  border-radius: 50%;
   margin: 0 auto 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 2.2rem;
   color: var(--white);
-  border: 3px solid rgba(255, 255, 255, 0.2);
+  border: 4px solid var(--white);
   background-size: cover;
   background-position: center;
   position: relative;
   z-index: 1;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .profile-name {
   font-family: var(--font-display);
   font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--white);
+  font-weight: 700;
+  color: var(--green-800);
   margin-bottom: 4px;
   letter-spacing: -0.5px;
   position: relative;
@@ -105,19 +56,71 @@
 }
 
 .profile-email {
-  font-size: 0.88rem;
-  color: var(--blue-300);
+  font-size: 0.85rem;
+  color: var(--gray-500);
   font-weight: 500;
   position: relative;
   z-index: 1;
+  margin-bottom: 10px;
+}
+
+.profile-level {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background: var(--sage-50);
+  border: 1.5px solid var(--sage-200);
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--sage-600);
+}
+
+/* --- Stats Grid --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 16px;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 18px 16px;
+  text-align: center;
+  border: 1.5px solid var(--sage-100);
+  box-shadow: var(--shadow-xs);
+}
+
+.stat-value {
+  display: block;
+  font-family: var(--font-handwritten);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--green-800);
+  line-height: 1.2;
+}
+
+.stat-label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 4px;
 }
 
 /* --- Profile Sections --- */
 .profile-section {
   background: var(--white);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--gray-100);
+  border: 1.5px solid var(--sage-100);
   padding: 20px;
   margin-bottom: 14px;
   transition: box-shadow 0.3s ease;
@@ -134,20 +137,16 @@
   font-family: var(--font-display);
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--gray-900);
+  color: var(--gray-800);
   margin-bottom: 4px;
   letter-spacing: -0.2px;
-}
-
-.profile-section-header svg {
-  color: var(--blue-500);
 }
 
 .profile-section-note {
   font-size: 0.75rem;
   color: var(--gray-400);
   margin-bottom: 16px;
-  padding-left: 28px;
+  padding-left: 34px;
   font-weight: 500;
 }
 
@@ -157,7 +156,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--sage-50);
 }
 
 .profile-detail-row:last-child {
@@ -173,7 +172,7 @@
 
 .profile-detail-value {
   font-size: 0.85rem;
-  color: var(--gray-900);
+  color: var(--gray-800);
   font-weight: 700;
   text-align: right;
 }
@@ -188,11 +187,13 @@
 
 .profile-class-tag {
   padding: 6px 14px;
-  background: var(--blue-50);
-  color: var(--blue-700);
+  background: var(--sage-50);
+  color: var(--sage-600);
   border-radius: var(--radius-full);
   font-size: 0.78rem;
   font-weight: 700;
+  font-family: var(--font-display);
+  border: 1px solid var(--sage-100);
 }
 
 /* --- Mini Availability Grid --- */
@@ -200,8 +201,8 @@
   display: grid;
   grid-template-columns: 48px repeat(7, 1fr);
   min-width: 360px;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-md);
+  border: 1.5px solid var(--sage-100);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   margin-top: 10px;
 }
@@ -212,20 +213,21 @@
 }
 
 .pavail-corner {
-  background: var(--gray-50);
-  border-bottom: 1px solid var(--gray-200);
+  background: var(--sage-50);
+  border-bottom: 1px solid var(--sage-100);
 }
 
 .pavail-header {
   font-size: 0.63rem;
   font-weight: 700;
-  color: var(--gray-600);
+  font-family: var(--font-display);
+  color: var(--sage-600);
   text-align: center;
   padding: 7px 2px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  background: var(--gray-50);
-  border-bottom: 1px solid var(--gray-200);
+  background: var(--sage-50);
+  border-bottom: 1px solid var(--sage-100);
 }
 
 .pavail-time {
@@ -235,25 +237,24 @@
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  background: var(--gray-50);
-  border-right: 1px solid var(--gray-200);
+  background: var(--sage-50);
+  border-right: 1px solid var(--sage-100);
 }
 
 .pavail-cell {
   height: 20px;
-  background: var(--gray-100);
+  background: var(--cream);
   border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .pavail-cell.active {
-  background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+  background: linear-gradient(135deg, var(--emerald-400), var(--emerald-500));
 }
 
 /* --- Sign Out --- */
 .sign-out-btn {
   margin-top: 8px;
   margin-bottom: 24px;
-  border: 1px solid var(--gray-200);
 }
 
 .sign-out-btn:hover {
@@ -280,12 +281,8 @@
 }
 
 .section-edit-btn:hover {
-  background: var(--blue-50);
-  color: var(--blue-600);
-}
-
-.section-edit-btn svg {
-  color: inherit;
+  background: var(--sage-50);
+  color: var(--sage-600);
 }
 
 /* --- Edit Actions Row --- */
@@ -306,8 +303,8 @@
 
 /* --- Editing State --- */
 .profile-section.editing {
-  border-color: var(--blue-200);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08), var(--shadow-md);
+  border-color: var(--sage-300);
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.08), var(--shadow-md);
 }
 
 /* --- Page Content Padding --- */

@@ -1,38 +1,42 @@
-# BYU Synapse
+# Herd
 
 ## Overview
-PWA that helps BYU students find study partners by matching on shared classes and availability. Built with vanilla JS + Firebase, deployed on Vercel.
+PWA that helps BYU students find study groups ("herds") by matching on shared classes and availability. Cow/pasture-themed UI with cream/sage/green palette. Built with vanilla JS + Firebase, deployed on Vercel.
 
 ## Tech Stack
 - **Frontend**: Vanilla ES6 modules (`type="module"`), no build tools or bundler
 - **Backend**: Firebase v11.3.0 (CDN) — Auth, Firestore, Cloud Storage
-- **Fonts**: Bricolage Grotesque (display), Plus Jakarta Sans (body) via Google Fonts
+- **Fonts**: Quicksand (display), Nunito (body), Gaegu (handwritten) via Google Fonts
+- **Icons**: Material Symbols Rounded (CDN)
 - **Deploy**: Vercel static site — `vercel --prod` to deploy
-- **PWA**: Service worker (`sw.js`) with network-first caching
+- **PWA**: Service worker (`sw.js`) with network-first caching, cache name `herd-v1`
 
 ## File Structure
 ```
-├── index.html              # Auth (login/signup)
+├── index.html              # Auth (login/signup) — cream bg, cow mascot
 ├── profile-setup.html      # Onboarding wizard (3 steps)
-├── profile.html            # Profile view + inline editing
-├── discover.html           # Find classmates
-├── friends.html            # Friends list + requests
+├── pasture.html            # Home page — herd feed by day
+├── roam.html               # Map discovery — CSS-only stylized map
+├── create-herd.html        # Create study group form
+├── herds.html              # Community — my herds + recommended
+├── profile.html            # Profile view + inline editing + stats
 ├── css/
-│   ├── style.css           # Core design system + shared components
+│   ├── style.css           # Core design system (cream/sage/green palette)
 │   ├── profile-setup.css   # Setup wizard styles (also used by profile inline edit)
-│   ├── profile.css         # Profile page styles
-│   ├── discover.css        # Discover page styles
-│   └── friends.css         # Friends page styles
+│   └── profile.css         # Profile page styles + stats cards
 ├── js/
 │   ├── firebase-config.js  # Firebase init — exports { auth, db, storage }
 │   ├── auth.js             # Login/signup logic
+│   ├── shared.js           # Extracted avatar utilities (getAvatarColor, getInitials)
 │   ├── profile-setup.js    # 3-step onboarding (photo, classes, availability)
-│   ├── profile.js          # Profile display + per-section inline editing
-│   ├── discover.js         # Classmate discovery + friend requests
-│   ├── friends.js          # Friends list, requests, expanded details
+│   ├── profile.js          # Profile display + inline editing + herd stats
+│   ├── pasture.js          # Home page — load herds by date, joinHerd()
+│   ├── roam.js             # Map discovery — markers, filters, detail card
+│   ├── create-herd.js      # Create herd form + Firestore write
+│   ├── herds.js            # Community — my herds, recommended, joinHerd()
 │   └── byu-classes.js      # BYU class catalog (~5,400 courses, default export)
 ├── images/                 # PWA icons (192, 512)
-├── manifest.json           # PWA manifest
+├── manifest.json           # PWA manifest (Herd branding)
 └── sw.js                   # Service worker (network-first)
 ```
 
@@ -43,6 +47,7 @@ PWA that helps BYU students find study partners by matching on shared classes an
 2. `onAuthStateChanged` guards every page — redirects to `index.html` if not logged in
 3. If `profileSetup !== true` → redirect to `profile-setup.html`
 4. Otherwise → page loads normally
+5. After login/signup → redirect to `pasture.html`
 
 ### DOM Callbacks
 All onclick handlers use `window.*` functions (required for ES modules):
@@ -50,11 +55,17 @@ All onclick handlers use `window.*` functions (required for ES modules):
 window.handleLogin = async function() { ... }
 ```
 
-### Firestore
-- **Users** collection: `{ name, email, phone, photoURL, classes[], availability{}, friends[], profileSetup, createdAt }`
-- **Friend Requests** collection: doc ID = `{fromUid}_{toUid}`, fields: `{ from, fromName, to, status, createdAt, acceptedAt }`
-- Always use `setDoc(docRef, data, { merge: true })` for updates
-- `array-contains-any` for finding classmates (max 30 items per Firestore limit)
+### Firestore Collections
+- **Users**: `{ name, email, phone, photoURL, classes[], availability{}, friends[], profileSetup, createdAt }`
+- **Herds**: `{ name, location, style, creator, creatorName, members[], memberCount, schedule: { date, startTime, endTime }, createdAt, active }`
+- Always use `setDoc(docRef, data, { merge: true })` for user updates
+- `array-contains` for querying herds by member
+- `arrayUnion` for joining herds
+
+### Herd Styles
+- `quiet` — Focus mode
+- `casual` — Chat & study
+- `stampede` — Cram session
 
 ### Availability Grid
 - Days: Mon–Sun, Times: 8AM–9PM (14 slots)
@@ -62,21 +73,27 @@ window.handleLogin = async function() { ... }
 - Interactive grid uses mousedown+mouseenter drag + touch support
 
 ### Avatar System
-Deterministic color from UID hash, initials from name. 12-color palette.
+Deterministic color from UID hash, initials from name. 12-color green/earth palette.
+Shared utilities in `js/shared.js`: `getAvatarColor()`, `getInitials()`.
 
 ### Inline Profile Editing
 Each section (contact, classes, availability) has `*-view` and `*-edit` divs toggled by `enterEditMode(section)` / `cancelEdit(section)`. Saves independently with `merge: true`.
 
+### Bottom Navigation
+5 tabs: Pasture, Roam, + (center elevated button), Herds, Profile.
+Uses Material Symbols Rounded icons. Center button links to `create-herd.html`.
+
 ## CSS Design System
 - Variables defined in `:root` in `style.css`
-- Colors: `--blue-50` to `--blue-700`, `--gray-50` to `--gray-900`, `--emerald-*`, `--rose-*`, `--amber-*`
-- Dark theme: `--midnight`, `--deep`, `--navy`, `--navy-light`, `--slate`
-- Glass effects: `--glass-bg`, `--glass-border`, `--glass-bg-light`, `--glass-border-light`
+- Palette: `--cream`, `--sage-50` to `--sage-600`, `--green-50` to `--green-800`, `--emerald-*`, `--amber-*`, `--rose-*`
+- Typography: `--font-display` (Quicksand), `--font-body` (Nunito), `--font-handwritten` (Gaegu)
 - Radius: `--radius-xs` (6px) to `--radius-full` (9999px)
-- Shadows: `--shadow-xs` to `--shadow-xl`, `--shadow-glow-blue`, `--shadow-glow-amber`
+- Shadows: `--shadow-xs` to `--shadow-xl`, `--shadow-glow-green`, `--shadow-glow-amber`
 - Easing: `--ease-out-expo`, `--ease-spring`
 - `.hidden { display: none !important; }` for visibility toggling
 - `.message.error` / `.message.success` for feedback
+- `.blob-card` — rounded white cards with sage borders
+- `.font-handwritten` — Gaegu font utility class
 
 ## Commands
 - **Local dev**: `python3 -m http.server 8000` (or any static server)
