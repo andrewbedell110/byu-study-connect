@@ -10,7 +10,8 @@ import {
   query,
   where,
   updateDoc,
-  arrayUnion
+  arrayUnion,
+  arrayRemove
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 import { getAvatarColor, getInitials } from './shared.js';
 import BYU_CLASSES from './byu-classes.js';
@@ -18,6 +19,7 @@ import BYU_CLASSES from './byu-classes.js';
 let currentUser = null;
 let userData = null;
 let selectedDate = new Date();
+let allLoadedHerds = [];
 
 // ============================================
 // AUTH CHECK
@@ -119,6 +121,43 @@ async function loadHerds() {
 
     renderNearbyList(allHerds.slice(0, 5));
 
+    // Split all active herds into My Herds and Recommended
+    const allActiveQuery = query(
+      collection(db, 'herds'),
+      where('active', '==', true)
+    );
+    const allActiveSnapshot = await getDocs(allActiveQuery);
+    const myHerdsList = [];
+    const recommendedList = [];
+    const userClasses = userData?.classes || [];
+
+    allActiveSnapshot.forEach(d => {
+      const data = d.data();
+      const herd = { id: d.id, ...data };
+      if (data.members?.includes(currentUser.uid)) {
+        myHerdsList.push(herd);
+      } else {
+        if (data.visibility !== 'closed') {
+          if (!data.classId || userClasses.includes(data.classId)) {
+            recommendedList.push(herd);
+          }
+        }
+      }
+    });
+
+    // Store all herds for member lookup
+    allLoadedHerds = [...herds, ...myHerdsList, ...recommendedList];
+    // Deduplicate by id
+    const seen = new Set();
+    allLoadedHerds = allLoadedHerds.filter(h => {
+      if (seen.has(h.id)) return false;
+      seen.add(h.id);
+      return true;
+    });
+
+    renderMyHerdsList(myHerdsList);
+    renderRecommendedList(recommendedList);
+
   } catch (error) {
     console.error('Error loading herds:', error);
   } finally {
@@ -207,11 +246,11 @@ function renderHerdFeed(herds) {
           <span><span class="material-symbols-rounded">location_on</span> ${escapeHtml(herd.location || '')}</span>
         </div>
         <div class="herd-card-footer">
-          <div class="avatar-stack">
+          <div class="avatar-stack avatar-stack-clickable" onclick="event.stopPropagation(); showMembers('${herd.id}')" title="View members">
             ${memberAvatars}
             ${extraCount > 0 ? `<div class="avatar-sm avatar-more">+${extraCount}</div>` : ''}
           </div>
-          <button class="join-btn ${joinBtnClass}" onclick="joinHerd('${herd.id}', this)">
+          <button class="join-btn ${joinBtnClass}" ${isCreator ? 'data-creator="true"' : ''} onclick="joinHerd('${herd.id}', this)">
             <span class="material-symbols-rounded">${joinBtnIcon}</span>
             ${joinBtnText}
           </button>
@@ -255,6 +294,11 @@ function renderNearbyList(herds) {
 window.joinHerd = async function(herdId, btn) {
   if (!currentUser) return;
 
+  // If already joined, leave instead
+  if (btn.classList.contains('joined') && !btn.dataset.creator) {
+    return leaveHerd(herdId, btn);
+  }
+
   btn.disabled = true;
   try {
     await updateDoc(doc(db, 'herds', herdId), {
@@ -269,6 +313,170 @@ window.joinHerd = async function(herdId, btn) {
   } finally {
     btn.disabled = false;
   }
+};
+
+async function leaveHerd(herdId, btn) {
+  btn.disabled = true;
+  try {
+    const herdDoc = await getDoc(doc(db, 'herds', herdId));
+    const currentMembers = herdDoc.data().members || [];
+
+    await updateDoc(doc(db, 'herds', herdId), {
+      members: arrayRemove(currentUser.uid),
+      memberCount: Math.max(0, currentMembers.length - 1)
+    });
+
+    btn.classList.remove('joined');
+    btn.innerHTML = '<span class="material-symbols-rounded" style="font-size: 16px;">group_add</span> Join Herd';
+  } catch (error) {
+    console.error('Error leaving herd:', error);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ============================================
+// RENDER MY HERDS LIST
+// ============================================
+function renderMyHerdsList(herds) {
+  const container = document.getElementById('my-herds');
+  if (!container) return;
+
+  if (herds.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state" style="padding: 32px 20px;">
+        <span class="material-symbols-rounded">groups</span>
+        <h3>No herds yet</h3>
+        <p>Join a herd or create your own to get started!</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = herds.map(herd => {
+    const styleEmoji = herd.style === 'quiet' ? '\u{1F92B}' : herd.style === 'stampede' ? '\u26A1' : '\u{1F4AC}';
+    const styleClass = herd.style || 'casual';
+    const isCreator = herd.creator === currentUser.uid;
+    const editBtn = isCreator
+      ? `<a href="create-herd.html?edit=${herd.id}" class="herd-edit-btn" title="Edit herd"><span class="material-symbols-rounded">edit</span></a>`
+      : '';
+
+    return `
+      <div class="herd-list-card animate-in">
+        <div class="herd-list-icon ${styleClass}">${styleEmoji}</div>
+        <div class="herd-list-info">
+          <div class="herd-list-name">${escapeHtml(herd.name)}</div>
+          <div class="herd-list-meta">
+            ${getClassBadge(herd.classId)}
+            <span><span class="material-symbols-rounded">location_on</span> ${escapeHtml(herd.location || '')}</span>
+            <span><span class="material-symbols-rounded">group</span> ${herd.memberCount || herd.members?.length || 0}</span>
+          </div>
+        </div>
+        ${editBtn}
+      </div>
+    `;
+  }).join('');
+}
+
+// ============================================
+// RENDER RECOMMENDED LIST
+// ============================================
+function renderRecommendedList(herds) {
+  const container = document.getElementById('recommended-herds');
+  if (!container) return;
+
+  if (herds.length === 0) {
+    container.innerHTML = '<p style="text-align: center; color: var(--gray-400); padding: 20px; font-size: 0.85rem;">No recommendations right now.</p>';
+    return;
+  }
+
+  container.innerHTML = herds.map(herd => {
+    const styleEmoji = herd.style === 'quiet' ? '\u{1F92B}' : herd.style === 'stampede' ? '\u26A1' : '\u{1F4AC}';
+    const styleClass = herd.style || 'casual';
+
+    return `
+      <div class="herd-list-card animate-in">
+        <div class="herd-list-icon ${styleClass}">${styleEmoji}</div>
+        <div class="herd-list-info">
+          <div class="herd-list-name">${escapeHtml(herd.name)}</div>
+          <div class="herd-list-meta">
+            ${getClassBadge(herd.classId)}
+            <span><span class="material-symbols-rounded">location_on</span> ${escapeHtml(herd.location || '')}</span>
+            <span><span class="material-symbols-rounded">group</span> ${herd.memberCount || herd.members?.length || 0}</span>
+          </div>
+        </div>
+        <div>
+          <button class="add-btn" onclick="joinHerd('${herd.id}', this)" title="Join herd">
+            <span class="material-symbols-rounded">add</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============================================
+// SHOW MEMBERS MODAL
+// ============================================
+window.showMembers = async function(herdId) {
+  const modal = document.getElementById('members-modal');
+  const list = document.getElementById('members-modal-list');
+  const title = document.getElementById('members-modal-title');
+
+  // Find herd
+  const herd = allLoadedHerds.find(h => h.id === herdId);
+  if (!herd || !herd.members || herd.members.length === 0) {
+    list.innerHTML = '<div class="members-loading">No members yet.</div>';
+    modal.classList.remove('hidden');
+    return;
+  }
+
+  title.textContent = `Members (${herd.members.length})`;
+  list.innerHTML = '<div class="members-loading">Loading members...</div>';
+  modal.classList.remove('hidden');
+
+  try {
+    // Fetch member user docs (batched in groups of 10)
+    const memberDocs = [];
+    for (let i = 0; i < herd.members.length; i += 10) {
+      const batch = herd.members.slice(i, i + 10);
+      const memberQuery = query(
+        collection(db, 'users'),
+        where('__name__', 'in', batch)
+      );
+      const snapshot = await getDocs(memberQuery);
+      snapshot.forEach(d => {
+        memberDocs.push({ uid: d.id, ...d.data() });
+      });
+    }
+
+    if (memberDocs.length === 0) {
+      list.innerHTML = '<div class="members-loading">No member info available.</div>';
+      return;
+    }
+
+    list.innerHTML = memberDocs.map(member => {
+      const color = getAvatarColor(member.uid);
+      const initials = getInitials(member.name || '?');
+      const isCreator = member.uid === herd.creator;
+      return `
+        <div class="member-item">
+          <div class="member-avatar" style="background-color: ${color};">${initials}</div>
+          <div>
+            <div class="member-name">${escapeHtml(member.name || 'Unknown')}</div>
+            ${isCreator ? '<div class="member-badge">Creator</div>' : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (error) {
+    console.error('Error loading members:', error);
+    list.innerHTML = '<div class="members-loading">Failed to load members.</div>';
+  }
+};
+
+window.closeMembersModal = function() {
+  document.getElementById('members-modal').classList.add('hidden');
 };
 
 // ============================================

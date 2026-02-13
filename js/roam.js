@@ -10,9 +10,11 @@ import {
   query,
   where,
   updateDoc,
-  arrayUnion
+  arrayUnion,
+  arrayRemove
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 import BYU_CLASSES from './byu-classes.js';
+import { getAvatarColor, getInitials } from './shared.js';
 
 let currentUser = null;
 let userData = null;
@@ -162,7 +164,7 @@ window.showDetail = function(herdId) {
   meta.innerHTML = `
     ${classLabel ? `<span><span class="material-symbols-rounded">school</span> ${escapeHtml(classLabel)}</span>` : ''}
     <span><span class="material-symbols-rounded">location_on</span> ${escapeHtml(selectedHerd.location || 'TBD')}</span>
-    <span><span class="material-symbols-rounded">group</span> ${selectedHerd.memberCount || selectedHerd.members?.length || 0} members</span>
+    <span class="detail-members-link" onclick="showMembers('${selectedHerd.id}')"><span class="material-symbols-rounded">group</span> ${selectedHerd.memberCount || selectedHerd.members?.length || 0} members</span>
     <span><span class="material-symbols-rounded">schedule</span> ${selectedHerd.schedule?.startTime || ''}</span>
   `;
 
@@ -186,6 +188,13 @@ window.closeDetail = function() {
 
 async function joinHerdFromDetail(herdId, btn) {
   if (!currentUser) return;
+
+  // If already joined, leave instead (unless creator)
+  const isCreator = selectedHerd?.creator === currentUser.uid;
+  if (btn.classList.contains('joined') && !isCreator) {
+    return leaveHerdFromDetail(herdId, btn);
+  }
+
   btn.disabled = true;
 
   try {
@@ -202,6 +211,89 @@ async function joinHerdFromDetail(herdId, btn) {
     btn.disabled = false;
   }
 }
+
+async function leaveHerdFromDetail(herdId, btn) {
+  btn.disabled = true;
+
+  try {
+    const herdDoc = await getDoc(doc(db, 'herds', herdId));
+    const currentMembers = herdDoc.data().members || [];
+
+    await updateDoc(doc(db, 'herds', herdId), {
+      members: arrayRemove(currentUser.uid),
+      memberCount: Math.max(0, currentMembers.length - 1)
+    });
+
+    btn.classList.remove('joined');
+    btn.innerHTML = '<span class="material-symbols-rounded" style="font-size: 16px;">group_add</span> Join Herd';
+  } catch (error) {
+    console.error('Error leaving herd:', error);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ============================================
+// SHOW MEMBERS MODAL
+// ============================================
+window.showMembers = async function(herdId) {
+  const modal = document.getElementById('members-modal');
+  const list = document.getElementById('members-modal-list');
+  const title = document.getElementById('members-modal-title');
+
+  const herd = allHerds.find(h => h.id === herdId);
+  if (!herd || !herd.members || herd.members.length === 0) {
+    list.innerHTML = '<div class="members-loading">No members yet.</div>';
+    modal.classList.remove('hidden');
+    return;
+  }
+
+  title.textContent = `Members (${herd.members.length})`;
+  list.innerHTML = '<div class="members-loading">Loading members...</div>';
+  modal.classList.remove('hidden');
+
+  try {
+    const memberDocs = [];
+    for (let i = 0; i < herd.members.length; i += 10) {
+      const batch = herd.members.slice(i, i + 10);
+      const memberQuery = query(
+        collection(db, 'users'),
+        where('__name__', 'in', batch)
+      );
+      const snapshot = await getDocs(memberQuery);
+      snapshot.forEach(d => {
+        memberDocs.push({ uid: d.id, ...d.data() });
+      });
+    }
+
+    if (memberDocs.length === 0) {
+      list.innerHTML = '<div class="members-loading">No member info available.</div>';
+      return;
+    }
+
+    list.innerHTML = memberDocs.map(member => {
+      const color = getAvatarColor(member.uid);
+      const initials = getInitials(member.name || '?');
+      const isCreator = member.uid === herd.creator;
+      return `
+        <div class="member-item">
+          <div class="member-avatar" style="background-color: ${color};">${initials}</div>
+          <div>
+            <div class="member-name">${escapeHtml(member.name || 'Unknown')}</div>
+            ${isCreator ? '<div class="member-badge">Creator</div>' : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (error) {
+    console.error('Error loading members:', error);
+    list.innerHTML = '<div class="members-loading">Failed to load members.</div>';
+  }
+};
+
+window.closeMembersModal = function() {
+  document.getElementById('members-modal').classList.add('hidden');
+};
 
 function escapeHtml(str) {
   const div = document.createElement('div');

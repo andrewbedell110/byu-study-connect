@@ -207,6 +207,101 @@
       color: var(--gray-500);
     }
 
+    /* Herds sections (My Herds / Recommended) */
+    .herds-section {
+      padding: 0 16px;
+      margin-bottom: 8px;
+    }
+
+    .herds-section-title {
+      font-family: var(--font-handwritten);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--green-800);
+      padding: 16px 4px 10px;
+    }
+
+    .herd-list-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1.5px solid var(--sage-100);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.2s ease;
+    }
+    .herd-list-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .herd-list-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 22px;
+    }
+    .herd-list-icon.quiet { background: var(--sage-50); }
+    .herd-list-icon.casual { background: var(--emerald-50); }
+    .herd-list-icon.stampede { background: var(--amber-50); }
+
+    .herd-list-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .herd-list-name {
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .herd-list-meta {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .herd-list-meta span {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .herd-list-meta .material-symbols-rounded { font-size: 14px; }
+
+    .add-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid var(--sage-200);
+      background: var(--sage-50);
+      color: var(--sage-500);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .add-btn:hover {
+      background: var(--sage-500);
+      color: var(--white);
+      border-color: var(--sage-500);
+    }
+    .add-btn .material-symbols-rounded { font-size: 20px; }
+
     /* Loading state */
     .feed-loading {
       display: flex;
@@ -222,6 +317,95 @@
       width: 28px;
       height: 28px;
     }
+
+    /* Members Modal */
+    .herd-members-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(4px);
+    }
+    .members-modal-content {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      width: 100%;
+      max-width: 360px;
+      max-height: 70vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-xl);
+    }
+    .members-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .members-modal-header h3 {
+      font-family: var(--font-handwritten);
+      font-size: 1.2rem;
+      color: var(--green-800);
+    }
+    .members-modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: var(--sage-50);
+      color: var(--gray-500);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .members-modal-close:hover { background: var(--sage-100); }
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--sage-50);
+    }
+    .member-item:last-child { border-bottom: none; }
+    .member-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    .member-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--gray-800);
+    }
+    .member-badge {
+      font-size: 0.7rem;
+      color: var(--sage-500);
+      font-weight: 600;
+    }
+    .members-loading {
+      text-align: center;
+      padding: 20px;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+
+    /* Clickable avatar stack */
+    .avatar-stack-clickable { cursor: pointer; }
+    .avatar-stack-clickable:hover { opacity: 0.8; }
   </style>
 </head>
 <body>
@@ -251,6 +435,33 @@
 
       <div class="section-label">Nearby Herds</div>
       <div class="nearby-list" id="nearby-list"></div>
+
+      <!-- My Herds -->
+      <div class="herds-section">
+        <div class="herds-section-title">My Herds</div>
+        <div id="my-herds"></div>
+      </div>
+
+      <!-- Recommended -->
+      <div class="herds-section">
+        <div class="herds-section-title">Recommended for You</div>
+        <div id="recommended-herds"></div>
+      </div>
+    </div>
+
+    <!-- Members Modal -->
+    <div class="herd-members-modal hidden" id="members-modal" onclick="if(event.target===this)closeMembersModal()">
+      <div class="members-modal-content">
+        <div class="members-modal-header">
+          <h3 id="members-modal-title">Members</h3>
+          <button class="members-modal-close" onclick="closeMembersModal()">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </div>
+        <div id="members-modal-list">
+          <div class="members-loading">Loading members...</div>
+        </div>
+      </div>
     </div>
 
     <!-- Bottom Navigation -->
@@ -266,9 +477,9 @@
       <a href="create-herd.html" class="nav-item nav-center-btn">
         <span class="material-symbols-rounded">add</span>
       </a>
-      <a href="herds.html" class="nav-item">
-        <span class="material-symbols-rounded">groups</span>
-        Herds
+      <a href="friends.html" class="nav-item">
+        <span class="material-symbols-rounded">people</span>
+        Friends
       </a>
       <a href="profile.html" class="nav-item">
         <span class="material-symbols-rounded">person</span>

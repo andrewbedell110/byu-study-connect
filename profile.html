@@ -34,8 +34,28 @@
 
       <!-- Profile Hero -->
       <div class="profile-hero">
-        <div class="profile-avatar" id="profile-avatar"></div>
-        <h2 class="profile-name" id="profile-name"></h2>
+        <div class="profile-avatar-wrapper">
+          <div class="profile-avatar" id="profile-avatar"></div>
+          <button class="avatar-edit-overlay" onclick="changePhoto()" title="Change photo">
+            <span class="material-symbols-rounded">photo_camera</span>
+          </button>
+          <input type="file" id="photo-input" accept="image/*" class="hidden">
+        </div>
+        <div class="name-display" id="name-display">
+          <h2 class="profile-name" id="profile-name"></h2>
+          <button class="name-edit-btn" onclick="editName()" title="Edit name">
+            <span class="material-symbols-rounded" style="font-size: 16px;">edit</span>
+          </button>
+        </div>
+        <div class="name-edit-row hidden" id="name-edit-row">
+          <input type="text" class="name-edit-input" id="name-edit-input" placeholder="Your name">
+          <button class="name-save-btn" onclick="saveName()">
+            <span class="material-symbols-rounded" style="font-size: 18px;">check</span>
+          </button>
+          <button class="name-cancel-btn" onclick="cancelNameEdit()">
+            <span class="material-symbols-rounded" style="font-size: 18px;">close</span>
+          </button>
+        </div>
         <p class="profile-email" id="profile-email"></p>
         <div class="profile-level">
           <span class="material-symbols-rounded" style="font-size: 14px;">eco</span>
@@ -168,9 +188,9 @@
       <a href="create-herd.html" class="nav-item nav-center-btn">
         <span class="material-symbols-rounded">add</span>
       </a>
-      <a href="herds.html" class="nav-item">
-        <span class="material-symbols-rounded">groups</span>
-        Herds
+      <a href="friends.html" class="nav-item">
+        <span class="material-symbols-rounded">people</span>
+        Friends
       </a>
       <a href="profile.html" class="nav-item active">
         <span class="material-symbols-rounded">person</span>

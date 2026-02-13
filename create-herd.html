@@ -165,6 +165,18 @@
       grid-template-columns: 1fr 1fr 1fr;
       gap: 10px;
     }
+    .datetime-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .datetime-label {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gray-500);
+      text-align: center;
+    }
     .datetime-row input {
       padding: 12px;
       text-align: center;
@@ -268,12 +280,12 @@
           <label class="style-card active" onclick="pickVisibility('open', this)">
             <span class="style-icon"><span class="material-symbols-rounded" style="font-size: 28px;">public</span></span>
             <span class="style-name">Open</span>
-            <span class="style-desc">Anyone in this class</span>
+            <span class="style-desc">Anyone can join</span>
           </label>
           <label class="style-card" onclick="pickVisibility('closed', this)">
             <span class="style-icon"><span class="material-symbols-rounded" style="font-size: 28px;">lock</span></span>
             <span class="style-name">Closed</span>
-            <span class="style-desc">Invite only</span>
+            <span class="style-desc">Friends only</span>
           </label>
         </div>
       </div>
@@ -281,9 +293,18 @@
       <div class="form-group">
         <label>Date & Time</label>
         <div class="datetime-row">
-          <input type="date" id="herd-date">
-          <input type="time" id="herd-start" value="14:00">
-          <input type="time" id="herd-end" value="16:00">
+          <div class="datetime-field">
+            <span class="datetime-label">Date</span>
+            <input type="date" id="herd-date">
+          </div>
+          <div class="datetime-field">
+            <span class="datetime-label">Start Time</span>
+            <input type="time" id="herd-start" value="14:00">
+          </div>
+          <div class="datetime-field">
+            <span class="datetime-label">End Time</span>
+            <input type="time" id="herd-end" value="16:00">
+          </div>
         </div>
       </div>
     </div>

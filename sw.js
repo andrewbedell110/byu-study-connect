@@ -1,5 +1,5 @@
 // Service Worker for Herd PWA
-const CACHE_NAME = 'herd-v1';
+const CACHE_NAME = 'herd-v2';
 
 // Install event
 self.addEventListener('install', (event) => {

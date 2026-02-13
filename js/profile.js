@@ -1,4 +1,4 @@
-import { auth, db } from './firebase-config.js';
+import { auth, db, storage } from './firebase-config.js';
 import {
   onAuthStateChanged,
   signOut
@@ -12,6 +12,11 @@ import {
   query,
   where
 } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/11.3.0/firebase-storage.js";
 import BYU_CLASSES from './byu-classes.js';
 import { getAvatarColor, getInitials } from './shared.js';
 
@@ -421,6 +426,93 @@ function showProfileMessage(text, type) {
     }, 2500);
   }
 }
+
+// ============================================
+// CHANGE PROFILE PHOTO
+// ============================================
+window.changePhoto = function() {
+  document.getElementById('photo-input').click();
+};
+
+document.getElementById('photo-input').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file || !currentUser) return;
+
+  if (file.size > 5 * 1024 * 1024) {
+    showProfileMessage('Photo must be under 5MB.', 'error');
+    return;
+  }
+
+  showProfileMessage('Uploading photo...', 'success');
+
+  try {
+    const photoRef = ref(storage, `profile-photos/${currentUser.uid}`);
+    await uploadBytes(photoRef, file);
+    const photoURL = await getDownloadURL(photoRef);
+
+    await setDoc(doc(db, 'users', currentUser.uid), { photoURL }, { merge: true });
+
+    userData.photoURL = photoURL;
+
+    const avatar = document.getElementById('profile-avatar');
+    avatar.textContent = '';
+    avatar.style.backgroundImage = `url(${photoURL})`;
+    avatar.style.backgroundColor = '';
+
+    showProfileMessage('Photo updated!', 'success');
+  } catch (error) {
+    console.error('Photo upload error:', error);
+    showProfileMessage('Failed to upload photo. Please try again.', 'error');
+  }
+
+  // Reset input so same file can be re-selected
+  e.target.value = '';
+});
+
+// ============================================
+// EDIT NAME
+// ============================================
+window.editName = function() {
+  document.getElementById('name-display').classList.add('hidden');
+  const editRow = document.getElementById('name-edit-row');
+  editRow.classList.remove('hidden');
+  const input = document.getElementById('name-edit-input');
+  input.value = userData.name || '';
+  input.focus();
+};
+
+window.saveName = async function() {
+  const input = document.getElementById('name-edit-input');
+  const name = input.value.trim();
+
+  if (!name) {
+    showProfileMessage('Name cannot be empty.', 'error');
+    return;
+  }
+
+  try {
+    await setDoc(doc(db, 'users', currentUser.uid), { name }, { merge: true });
+    userData.name = name;
+
+    document.getElementById('profile-name').textContent = name;
+
+    // Update avatar initials if no photo
+    if (!userData.photoURL) {
+      document.getElementById('profile-avatar').textContent = getInitials(name);
+    }
+
+    cancelNameEdit();
+    showProfileMessage('Name updated!', 'success');
+  } catch (error) {
+    console.error('Name save error:', error);
+    showProfileMessage('Failed to update name. Please try again.', 'error');
+  }
+};
+
+window.cancelNameEdit = function() {
+  document.getElementById('name-edit-row').classList.add('hidden');
+  document.getElementById('name-display').classList.remove('hidden');
+};
 
 // ============================================
 // SIGN OUT

@@ -26,7 +26,7 @@ export function getBottomNav(activePage) {
     { id: 'pasture', href: 'pasture.html', icon: 'cottage', label: 'Pasture' },
     { id: 'roam', href: 'roam.html', icon: 'explore', label: 'Roam' },
     { id: 'create', href: 'create-herd.html', icon: 'add', label: '', isCenter: true },
-    { id: 'herds', href: 'herds.html', icon: 'groups', label: 'Herds' },
+    { id: 'friends', href: 'friends.html', icon: 'people', label: 'Friends' },
     { id: 'profile', href: 'profile.html', icon: 'person', label: 'Profile' },
   ];
 

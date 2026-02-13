@@ -178,8 +178,8 @@
     .map-marker.active { transform: scale(1.25) translateY(-4px); z-index: 20; }
 
     .marker-pin {
-      width: 14px;
-      height: 14px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       border: 2.5px solid var(--white);
       box-shadow: 0 2px 6px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05);
@@ -188,27 +188,27 @@
     .marker-pin::after {
       content: '';
       position: absolute;
-      bottom: -5px;
+      bottom: -7px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 4px solid transparent;
-      border-right: 4px solid transparent;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
     }
 
     .marker-pin.quiet {
       background: var(--sage-500);
     }
-    .marker-pin.quiet::after { border-top: 5px solid var(--sage-500); }
+    .marker-pin.quiet::after { border-top: 7px solid var(--sage-500); }
     .marker-pin.casual {
       background: var(--green-600);
     }
-    .marker-pin.casual::after { border-top: 5px solid var(--green-600); }
+    .marker-pin.casual::after { border-top: 7px solid var(--green-600); }
     .marker-pin.stampede {
       background: #d97706;
     }
-    .marker-pin.stampede::after { border-top: 5px solid #d97706; }
+    .marker-pin.stampede::after { border-top: 7px solid #d97706; }
 
     .marker-label {
       margin-top: 6px;
@@ -228,7 +228,7 @@
     .map-marker.active .marker-pin::before {
       content: '';
       position: absolute;
-      inset: -6px;
+      inset: -8px;
       border-radius: 50%;
       border: 2px solid currentColor;
       opacity: 0.3;
@@ -421,6 +421,97 @@
       justify-content: center;
     }
     .roam-detail-close .material-symbols-rounded { font-size: 18px; }
+
+    /* Members Modal */
+    .herd-members-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(4px);
+    }
+    .members-modal-content {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      width: 100%;
+      max-width: 360px;
+      max-height: 70vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-xl);
+    }
+    .members-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .members-modal-header h3 {
+      font-family: var(--font-handwritten);
+      font-size: 1.2rem;
+      color: var(--green-800);
+    }
+    .members-modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: var(--sage-50);
+      color: var(--gray-500);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .members-modal-close:hover { background: var(--sage-100); }
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--sage-50);
+    }
+    .member-item:last-child { border-bottom: none; }
+    .member-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    .member-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--gray-800);
+    }
+    .member-badge {
+      font-size: 0.7rem;
+      color: var(--sage-500);
+      font-weight: 600;
+    }
+    .members-loading {
+      text-align: center;
+      padding: 20px;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .detail-members-link {
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+    }
+    .detail-members-link:hover { color: var(--sage-500); }
   </style>
 </head>
 <body>
@@ -512,6 +603,21 @@
       </button>
     </div>
 
+    <!-- Members Modal -->
+    <div class="herd-members-modal hidden" id="members-modal" onclick="if(event.target===this)closeMembersModal()">
+      <div class="members-modal-content">
+        <div class="members-modal-header">
+          <h3 id="members-modal-title">Members</h3>
+          <button class="members-modal-close" onclick="closeMembersModal()">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </div>
+        <div id="members-modal-list">
+          <div class="members-loading">Loading members...</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
       <a href="pasture.html" class="nav-item">
@@ -525,9 +631,9 @@
       <a href="create-herd.html" class="nav-item nav-center-btn">
         <span class="material-symbols-rounded">add</span>
       </a>
-      <a href="herds.html" class="nav-item">
-        <span class="material-symbols-rounded">groups</span>
-        Herds
+      <a href="friends.html" class="nav-item">
+        <span class="material-symbols-rounded">people</span>
+        Friends
       </a>
       <a href="profile.html" class="nav-item">
         <span class="material-symbols-rounded">person</span>

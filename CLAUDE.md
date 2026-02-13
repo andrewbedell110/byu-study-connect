@@ -9,16 +9,17 @@ PWA that helps BYU students find study groups ("herds") by matching on shared cl
 - **Fonts**: Quicksand (display), Nunito (body), Gaegu (handwritten) via Google Fonts
 - **Icons**: Material Symbols Rounded (CDN)
 - **Deploy**: Vercel static site — `vercel --prod` to deploy
-- **PWA**: Service worker (`sw.js`) with network-first caching, cache name `herd-v1`
+- **PWA**: Service worker (`sw.js`) with network-first caching, cache name `herd-v2`
 
 ## File Structure
 ```
 ├── index.html              # Auth (login/signup) — cream bg, cow mascot
 ├── profile-setup.html      # Onboarding wizard (3 steps)
-├── pasture.html            # Home page — herd feed by day
+├── pasture.html            # Home page — herd feed by day + my herds + recommended
 ├── roam.html               # Map discovery — CSS-only stylized map
 ├── create-herd.html        # Create study group form
-├── herds.html              # Community — my herds + recommended
+├── friends.html            # Friends — classmate discovery + friend requests
+├── herds.html              # Redirect → friends.html (PWA cache compat)
 ├── profile.html            # Profile view + inline editing + stats
 ├── css/
 │   ├── style.css           # Core design system (cream/sage/green palette)
@@ -27,13 +28,14 @@ PWA that helps BYU students find study groups ("herds") by matching on shared cl
 ├── js/
 │   ├── firebase-config.js  # Firebase init — exports { auth, db, storage }
 │   ├── auth.js             # Login/signup logic
-│   ├── shared.js           # Extracted avatar utilities (getAvatarColor, getInitials)
+│   ├── shared.js           # Avatar utilities (getAvatarColor, getInitials) + bottom nav
 │   ├── profile-setup.js    # 3-step onboarding (photo, classes, availability)
 │   ├── profile.js          # Profile display + inline editing + herd stats
-│   ├── pasture.js          # Home page — load herds by date, joinHerd()
+│   ├── pasture.js          # Home page — herds by date, my herds, recommended
 │   ├── roam.js             # Map discovery — markers, filters, detail card
 │   ├── create-herd.js      # Create herd form + Firestore write
-│   ├── herds.js            # Community — my herds, recommended, joinHerd()
+│   ├── friends.js          # Friends — classmate discovery, friend requests
+│   ├── herds.js            # (legacy) Community herds logic
 │   └── byu-classes.js      # BYU class catalog (~5,400 courses, default export)
 ├── images/                 # PWA icons (192, 512)
 ├── manifest.json           # PWA manifest (Herd branding)
@@ -57,10 +59,14 @@ window.handleLogin = async function() { ... }
 
 ### Firestore Collections
 - **Users**: `{ name, email, phone, photoURL, classes[], availability{}, friends[], profileSetup, createdAt }`
+  - `friends[]` stores accepted friend UIDs (updated via `arrayUnion` on both sides)
 - **Herds**: `{ name, location, style, creator, creatorName, members[], memberCount, schedule: { date, startTime, endTime }, createdAt, active }`
+- **friendRequests**: `{ from, to, fromName, status: "pending"|"accepted"|"declined", createdAt }`
+  - Doc ID convention: `{fromUid}_{toUid}`
+  - Composite indexes needed: `to`+`status`, `from`+`status`
 - Always use `setDoc(docRef, data, { merge: true })` for user updates
 - `array-contains` for querying herds by member
-- `arrayUnion` for joining herds
+- `arrayUnion` for joining herds and adding friends
 
 ### Herd Styles
 - `quiet` — Focus mode
@@ -80,8 +86,13 @@ Shared utilities in `js/shared.js`: `getAvatarColor()`, `getInitials()`.
 Each section (contact, classes, availability) has `*-view` and `*-edit` divs toggled by `enterEditMode(section)` / `cancelEdit(section)`. Saves independently with `merge: true`.
 
 ### Bottom Navigation
-5 tabs: Pasture, Roam, + (center elevated button), Herds, Profile.
+5 tabs: Pasture, Roam, + (center elevated button), Friends, Profile.
 Uses Material Symbols Rounded icons. Center button links to `create-herd.html`.
+
+### Friends System
+- **Privacy**: Non-friends see name + shared classes only. Friends see email + phone.
+- **Flow**: Classmate discovery → Send request → Accept/Decline → Friends
+- Classmates are users sharing at least one class (queried via `array-contains-any`)
 
 ## CSS Design System
 - Variables defined in `:root` in `style.css`

@@ -24,11 +24,17 @@
   border-bottom: 1.5px solid var(--sage-100);
 }
 
+.profile-avatar-wrapper {
+  position: relative;
+  width: 96px;
+  margin: 0 auto 16px;
+  z-index: 1;
+}
+
 .profile-avatar {
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  margin: 0 auto 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,9 +45,39 @@
   border: 4px solid var(--white);
   background-size: cover;
   background-position: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.avatar-edit-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2px solid var(--sage-200);
+  color: var(--sage-500);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+.avatar-edit-overlay:hover {
+  background: var(--sage-50);
+  border-color: var(--sage-400);
+}
+.avatar-edit-overlay .material-symbols-rounded { font-size: 16px; }
+
+.name-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   position: relative;
   z-index: 1;
-  box-shadow: var(--shadow-lg);
 }
 
 .profile-name {
@@ -51,9 +87,77 @@
   color: var(--green-800);
   margin-bottom: 4px;
   letter-spacing: -0.5px;
+}
+
+.name-edit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--gray-400);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 4px;
+}
+.name-edit-btn:hover {
+  background: var(--sage-50);
+  color: var(--sage-600);
+}
+
+.name-edit-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   position: relative;
   z-index: 1;
+  margin-bottom: 4px;
 }
+
+.name-edit-input {
+  padding: 8px 14px;
+  border: 2px solid var(--sage-300);
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--green-800);
+  text-align: center;
+  outline: none;
+  width: 200px;
+  background: var(--white);
+}
+.name-edit-input:focus {
+  border-color: var(--sage-500);
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+}
+
+.name-save-btn, .name-cancel-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.name-save-btn {
+  background: var(--sage-500);
+  color: var(--white);
+}
+.name-save-btn:hover { background: var(--green-600); }
+.name-cancel-btn {
+  background: var(--sage-50);
+  color: var(--gray-500);
+  border: 1.5px solid var(--sage-200);
+}
+.name-cancel-btn:hover { background: var(--sage-100); }
 
 .profile-email {
   font-size: 0.85rem;

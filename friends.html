@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FDFBF0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Friends — Herd</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+  <style>
+    .friends-section {
+      padding: 0 16px;
+      margin-bottom: 8px;
+    }
+
+    .friends-section-title {
+      font-family: var(--font-handwritten);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--green-800);
+      padding: 16px 4px 10px;
+    }
+
+    .friend-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1.5px solid var(--sage-100);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.2s ease;
+    }
+    .friend-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .friend-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--white);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .friend-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .friend-name {
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .friend-meta {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .friend-meta .material-symbols-rounded { font-size: 14px; }
+
+    .friend-class-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 1px 6px;
+      border-radius: var(--radius-full);
+      background: var(--sage-50);
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--sage-600);
+    }
+
+    .friend-contact {
+      font-size: 0.72rem;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 3px;
+    }
+    .friend-contact .material-symbols-rounded { font-size: 13px; }
+    .friend-contact a {
+      color: var(--sage-500);
+      text-decoration: none;
+    }
+    .friend-contact a:hover { text-decoration: underline; }
+
+    .friend-action {
+      flex-shrink: 0;
+    }
+
+    .connect-btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, var(--sage-500), var(--green-600));
+      color: var(--white);
+      border: none;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .connect-btn:hover {
+      box-shadow: 0 2px 8px rgba(74, 124, 89, 0.25);
+      transform: translateY(-1px);
+    }
+    .connect-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+    .connect-btn .material-symbols-rounded { font-size: 16px; }
+
+    .connect-btn.sent {
+      background: var(--sage-50);
+      color: var(--sage-600);
+      border: 1.5px solid var(--sage-200);
+    }
+
+    .request-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .accept-btn {
+      padding: 8px 14px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, var(--sage-500), var(--green-600));
+      color: var(--white);
+      border: none;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .accept-btn:hover {
+      box-shadow: 0 2px 8px rgba(74, 124, 89, 0.25);
+    }
+    .accept-btn .material-symbols-rounded { font-size: 16px; }
+
+    .decline-btn {
+      padding: 8px 14px;
+      border-radius: var(--radius-full);
+      background: var(--white);
+      color: var(--gray-500);
+      border: 1.5px solid var(--sage-200);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .decline-btn:hover {
+      background: var(--sage-50);
+      border-color: var(--sage-300);
+    }
+    .decline-btn .material-symbols-rounded { font-size: 16px; }
+
+    /* Search */
+    .friends-search {
+      padding: 12px 16px 0;
+    }
+    .friends-search-input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid var(--sage-200);
+      background: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--gray-800);
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .friends-search-input:focus {
+      border-color: var(--sage-400);
+      box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+    }
+    .friends-search-wrap {
+      position: relative;
+    }
+    .friends-search-wrap .material-symbols-rounded {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-400);
+      font-size: 20px;
+    }
+
+    /* Loading */
+    .friends-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 24px;
+      color: var(--gray-500);
+      gap: 12px;
+    }
+    .friends-loading .spinner {
+      border-color: rgba(74, 124, 89, 0.15);
+      border-top-color: var(--sage-500);
+      width: 28px;
+      height: 28px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-page">
+
+    <!-- Header -->
+    <div class="app-header">
+      <h1>Friends</h1>
+      <button class="header-icon-btn" onclick="toggleSearch()">
+        <span class="material-symbols-rounded">search</span>
+      </button>
+    </div>
+
+    <!-- Search -->
+    <div class="friends-search hidden" id="friends-search">
+      <div class="friends-search-wrap">
+        <span class="material-symbols-rounded">search</span>
+        <input type="text" class="friends-search-input" id="search-input" placeholder="Search by name...">
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="friends-loading" class="friends-loading">
+      <div class="spinner"></div>
+      <span>Loading friends...</span>
+    </div>
+
+    <!-- Content -->
+    <div id="friends-content" class="hidden">
+
+      <!-- Pending Requests -->
+      <div class="friends-section hidden" id="pending-section">
+        <div class="friends-section-title">Pending Requests</div>
+        <div id="pending-requests"></div>
+      </div>
+
+      <!-- My Friends -->
+      <div class="friends-section">
+        <div class="friends-section-title">My Friends</div>
+        <div id="my-friends"></div>
+      </div>
+
+      <!-- Classmates -->
+      <div class="friends-section">
+        <div class="friends-section-title">Classmates</div>
+        <div id="classmates-list"></div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <a href="pasture.html" class="nav-item">
+        <span class="material-symbols-rounded">cottage</span>
+        Pasture
+      </a>
+      <a href="roam.html" class="nav-item">
+        <span class="material-symbols-rounded">explore</span>
+        Roam
+      </a>
+      <a href="create-herd.html" class="nav-item nav-center-btn">
+        <span class="material-symbols-rounded">add</span>
+      </a>
+      <a href="friends.html" class="nav-item active">
+        <span class="material-symbols-rounded">people</span>
+        Friends
+      </a>
+      <a href="profile.html" class="nav-item">
+        <span class="material-symbols-rounded">person</span>
+        Profile
+      </a>
+    </nav>
+
+  </div>
+
+  <script type="module" src="js/friends.js"></script>
+</body>
+</html>
